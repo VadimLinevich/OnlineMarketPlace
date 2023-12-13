@@ -1,0 +1,40 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using OnlineMarketplace.Entities
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+@{
+    var user = await UserManager.GetUserAsync(User);
+}
+@if (SignInManager.IsSignedIn(User))
+{
+    <nav class="header-nav">
+        <ul class="header-ul">
+            <li class="header-li">
+                <img src=@Url.Content(user.Avatar) class="profile" />
+                <ul class="header-ul">
+                    <li class="header-li sub-item non-pointer">
+                        <p>@User.Identity.Name</p>
+                    </li>
+                    <li class="header-li sub-item">
+                        <span class="material-icons-outlined"> grid_view </span>
+                        <a href="#">Dashboard</a>
+                    </li>
+                    <li class="header-li sub-item">
+                        <span class="material-icons-outlined"> manage_accounts </span>
+                        <a>Update Profile</a>
+                    </li>
+                    <li class="header-li sub-item">
+                        <span class="material-icons-outlined"> logout </span>
+                        <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@ViewContext.HttpContext.Request.Path" method="post">
+                            <button type="submit">Logout</button>
+                        </form>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+}
+else
+{
+    <a class="header-row__sign-in nav" asp-area="Identity" asp-page="/Account/Login">Sign in</a>
+}

@@ -1,0 +1,86 @@
+.content-column {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-top: 20px;
+    padding-left: 150px;
+    padding-right: 150px;
+}
+
+.reviews-number-text {
+    text-decoration: none;
+    color: rgb(90, 90, 90);
+    font-family: Inter;
+    font-size: 20px;
+    font-weight: bold;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+span.text-grade {
+    text-decoration: none;
+    color: rgb(21, 219, 14);
+    font-family: 'Poppins', sans-serif;
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 2px;
+}
+
+.rev-col {
+    display: flex;
+    flex-direction: column;
+    border: 2px solid;
+    border-color:rgb(150, 150, 150);
+    border-radius: 5px;
+    width: 700px;
+}
+
+.review-title {
+    background-color: #d9d9d9;
+    border-bottom: 2px solid;
+    border-color:rgb(150, 150, 150);
+    height: 30px;
+    padding: 10px 30px;
+    /* justify-content: center; */
+}
+
+.review-content {
+    background-color: white;
+    padding: 30px 10px;
+    height: auto;
+}
+
+.review-title-row
+{
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.reviews-title-text {
+    text-decoration: none;
+    /* width: 100px; */
+    color: rgb(0, 0, 0);
+    font-family: Inter;
+    font-size: 20px;
+    font-weight: normal;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.reviews-desc {
+    text-decoration: none;
+    color: rgb(0, 0, 0);
+    font-family: Inter;
+    font-size: 16px;
+    font-weight: normal;
+}
+
+.rect {
+    height: 2px;
+    width: auto;
+    background-color: rgb(206, 206, 206);
+    margin-top: 10px;
+}

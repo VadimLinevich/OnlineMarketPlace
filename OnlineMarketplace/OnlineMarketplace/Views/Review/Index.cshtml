@@ -1,0 +1,194 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> UserManager
+@{
+    @model ItemDetailViewModel;
+    var user = await UserManager.GetUserAsync(User);
+    string rating = "";
+}
+
+@section CSS {
+    <link rel="stylesheet" type="text/css" href="~/css/reviews.css" />
+}
+
+<div class="title-block">
+    <h1 class="title-block__title">@Model.product.ProductTitle</h1>
+    <div class="title-block__description-row">
+        <p class="title-block__description">By @Model.user.UserName</p>
+        <p class="title-block__description-sales"><i class="fa fa-1 fa-shopping-cart"></i><b>@Model.product.NumberOfSales</b> sales</p>
+    </div>
+    @if (Model.WishLists.Count() == 0)
+    {
+        <form asp-controller="Review" asp-action="AddToWishlist" asp-route-id=@Model.product.ProductID method="post"><button class="heart-like-button" type="submit"></button></form>
+    }
+    else
+    {
+        if (Model.WishLists[0].Products.Exists(p => p.ProductID == Model.product.ProductID))
+        {
+            <form asp-controller="Review" asp-action="AddToWishlist" asp-route-id=@Model.product.ProductID method="post"><button class="heart-like-button liked" type="submit"></button></form>
+        }
+        else
+        {
+            <form asp-controller="Review" asp-action="AddToWishlist" asp-route-id=@Model.product.ProductID method="post"><button class="heart-like-button" type="submit"></button></form>
+        }
+    }
+    <div class="detail-row">
+        <a class="sort-button" asp-action="Index" asp-controller="ItemDetail" asp-route-id=@Model.product.ProductID>Item details</a>
+        <a class="sort-button-active left-width-0" href="">Reviews</a>
+    </div>
+</div>
+<div class="main-content">
+    <div class="content-row">
+        <div class="content-column">
+            @if (user != null && Model.Reviews.Any(r => r.UserID == user.Id))
+            {
+                <form asp-action="Edit" asp-route-id=@Model.product.ProductID class="rev-container">
+                    <div class="score-row">
+                        <p class="score-row__your-score">Your Score:</p>
+                        <div class="stars">
+                            @for (int i = 10; i >= 1; i--)
+                            {
+                                @if (Model.review.Grade == i)
+                                {
+                                    <input type="radio" asp-for="@Model.review.Grade" id="rating-@i" checked value=@i>
+                                    <label for="rating-@i" class="stars__num-grade" id="rate-@i">@i</label>
+                                }
+                                else
+                                {
+                                    <input type="radio" asp-for="@Model.review.Grade" id="rating-@i" value=@i>
+                                    <label for="rating-@i" class="stars__num-grade" id="rate-@i">@i</label>
+                                }
+                            }
+                        </div>
+                    </div>
+                    <div asp-validation-summary="ModelOnly" class="login-form__error"></div>
+                    <textarea class="rev-container__rev-content" asp-for="@Model.review.Content" id="review" placeholder="Enter...">asdasda</textarea>
+                    <span asp-validation-for="@Model.review.Content" class="login-form__error"></span>
+                    <button type="submit" class="rev-container__submit-btn">Submit</button>
+                </form>
+            }
+            else
+            {
+                <form asp-action="Create" asp-route-id=@Model.product.ProductID class="rev-container">
+                    <div class="score-row">
+                        <p class="score-row__your-score">Your Score:</p>
+                        <div class="stars">
+                            <input type="radio" asp-for="@Model.review.Grade" id="rating-10" value="10">
+                            <label for="rating-10" class="stars__num-grade" id="rate-10">10</label>
+                            <input type="radio" asp-for="@Model.review.Grade" id="rating-9" value="9">
+                            <label for="rating-9" class="stars__num-grade" id="rate-9">9</label>
+                            <input type="radio" asp-for="@Model.review.Grade" id="rating-8" value="8">
+                            <label for="rating-8" class="stars__num-grade" id="rate-8">8</label>
+                            <input type="radio" asp-for="@Model.review.Grade" id="rating-7" value="7">
+                            <label for="rating-7" class="stars__num-grade" id="rate-7">7</label>
+                            <input type="radio" asp-for="@Model.review.Grade" id="rating-6" value="6">
+                            <label for="rating-6" class="stars__num-grade" id="rate-6">6</label>
+                            <input type="radio" asp-for="@Model.review.Grade" id="rating-5" value="5">
+                            <label for="rating-5" class="stars__num-grade" id="rate-5">5</label>
+                            <input type="radio" asp-for="@Model.review.Grade" id="rating-4" value="4">
+                            <label for="rating-4" class="stars__num-grade" id="rate-4">4</label>
+                            <input type="radio" asp-for="@Model.review.Grade" id="rating-3" value="3">
+                            <label for="rating-3" class="stars__num-grade" id="rate-3">3</label>
+                            <input type="radio" asp-for="@Model.review.Grade" id="rating-2" value="2">
+                            <label for="rating-2" class="stars__num-grade" id="rate-2">2</label>
+                            <input type="radio" asp-for="@Model.review.Grade" id="rating-1" checked value="1">
+                            <label for="rating-1" class="stars__num-grade" id="rate-1">1</label>
+                        </div>
+                    </div>
+                    <div asp-validation-summary="ModelOnly" class="login-form__error"></div>
+                    <textarea class="rev-container__rev-content" asp-for="@Model.review.Content" id="review" placeholder="Enter...">asdasda</textarea>
+                    <span asp-validation-for="@Model.review.Content" class="login-form__error"></span>
+                    <button type="submit" class="rev-container__submit-btn">Submit</button>
+                </form>
+            }
+            @{
+                if (Model.Reviews.Count() != 0)
+                {
+                    rating = Model.Reviews.Average(r => r.Grade).ToString("F1");
+                }
+                else
+                {
+                    rating = "-";
+                }
+            }
+            @if (rating == "-")
+            {
+                <p class="reviews-number-text">@Model.Reviews.Count() Reviews with average grade: <span class="text-grade default">@rating</span></p>
+            }
+            else
+            {
+                @if (Convert.ToDouble(rating) > 7)
+                {
+                    <p class="reviews-number-text">@Model.Reviews.Count() Reviews with average grade: <span class="text-grade green">@rating</span></p>
+                }
+                else
+                {
+                    @if (Convert.ToDouble(rating) < 4)
+                    {
+                        <p class="reviews-number-text">@Model.Reviews.Count() Reviews with average grade: <span class="text-grade red">@rating</span></p>
+                    }
+                    else
+                    {
+                        <p class="reviews-number-text">@Model.Reviews.Count() Reviews with average grade: <span class="text-grade yellow">@rating</span></p>
+                    }
+                }
+            }
+            <div class="rect"></div>
+            @foreach (var review in Model.Reviews)
+            {
+                <div class="rev-col">
+                    <div class="review-title">
+                        <div class="review-title-row">
+                            @if (review.Grade > 7)
+                            {
+                                <span class="text-grade green">@review.Grade</span>
+                            }
+                            else
+                            {
+                                if (review.Grade < 4)
+                                {
+                                    <span class="text-grade red">@review.Grade</span>
+                                }
+                                else
+                                {
+                                    <span class="text-grade yellow">@review.Grade</span>
+                                }
+                            }
+                            <p class="reviews-title-text">By @Model.Users.FirstOrDefault(u => u.Id == review.UserID).UserName</p>
+                        </div>
+                    </div>
+                    <div class="review-content">
+                        <p class="reviews-desc">@review.Content</p>
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="content-column">
+            <div class="price-container">
+                <div class="price-container__creator-row">
+                    <img class="creator-image" src=@Url.Content(Model.user.Avatar) />
+                    <p class="creator-name"><b>@Model.user.UserName</b></p>
+                </div>
+                <div class="rect"></div>
+                <p class="price">@Model.product.Price$</p>
+                <button class="button-hover-addcart button"><span>Buy</span><i class="fa fa-shopping-cart"></i></button>
+            </div>
+            <div class="characteristics-container">
+                <p class="group-table__info">
+                    Published: <span class="inter-text-20px">@Model.product.CreateDate.ToString("dd MMM yyyy", new System.Globalization.CultureInfo("en-US"))</span>
+                </p>
+                <p class="group-table__info">
+                    Files included: <span class="inter-text-20px">JS, HTML, CSS</span>
+                </p>
+                <p class="group-table__info">
+                    Software version: <span class="inter-text-20px">@Model.product.SoftwareVersion</span>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/js/sort-buttons-detail.js"></script>
+    <script src="~/js/heart.js"></script>
+}

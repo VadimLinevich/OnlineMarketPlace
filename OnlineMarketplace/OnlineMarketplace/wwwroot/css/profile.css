@@ -1,0 +1,117 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+.main-content {
+    max-width: 1520px;
+    display: flex;
+    flex-direction: column;
+    margin: 0px auto;
+}
+
+div.title-block {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: auto;
+    height: 200px;
+    padding-left: 200px;
+    padding-right: 200px;
+    background-color: rgb(255, 255, 255);
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    align-items: center;
+    border-color:rgb(192, 192, 192);
+}
+
+.user-row {
+    display: flex;
+    margin-top: 20px;
+    gap: 10px;
+}
+
+.user-image {
+    height: 100px;
+    width: 100px;
+}
+
+.user-name {
+    text-decoration: none;
+    color: black;
+    font-family: 'Poppins', sans-serif;
+    font-size: 22px;
+    font-weight: bold;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.user-details-col {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+
+.user-details-col__info {
+    height: auto;
+    /* width: 385px; */
+    color: black;
+    font-family: 'Poppins', sans-serif;
+    font-size: 12px;
+    height: 16px;
+    font-weight: bold;
+}
+
+.inter-text-12px {
+    color: black;
+    font-family: 'Poppins', sans-serif;
+    font-size: 12px;
+    font-weight: normal;
+}
+
+.detail-row {
+    position: absolute;
+    display: flex;
+    bottom: 0;
+}
+
+.sort-button {
+    display: inline-block;
+    text-decoration: none;
+    cursor: pointer;
+    background-color: rgb(255, 255, 255);
+    height: 30px;
+    width: 150px;
+    border-width: 1px;
+    border-style: solid;
+    border-color:rgb(192, 192, 192);
+    border-bottom-color: white;
+    color: #323232;
+    padding-top: 10px;
+    font-family: Inter;
+    font-size: 16px;
+    font-weight: 700;
+    font-style: normal;
+    text-align: center;
+}
+
+.sort-button-active {
+    display: inline-block;
+    text-decoration: none;
+    cursor: pointer;
+    background-color: #323232;
+    height: 30px;
+    width: 150px;
+    border-width: 1px;
+    border-style: solid;
+    border-color:rgb(192, 192, 192);
+    border-bottom-color: #323232;
+    color: #ffffff;
+    padding-top: 10px;
+    font-family: Inter;
+    font-size: 16px;
+    font-weight: 700;
+    font-style: normal;
+    text-align: center;
+}
+
+.left-width-0 {
+    border-left-width: 0px;
+}

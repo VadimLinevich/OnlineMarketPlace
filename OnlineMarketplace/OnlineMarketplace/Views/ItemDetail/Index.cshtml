@@ -1,0 +1,71 @@
+﻿@{
+    @model ItemDetailViewModel;
+}
+
+@section CSS {
+    <link rel="stylesheet" type="text/css" href="~/css/detailpage.css" />
+}
+
+<div class="title-block">
+    <h1 class="title-block__title">@Model.product.ProductTitle</h1>
+    <div class="title-block__description-row">
+        <p class="title-block__description">By @Model.user.UserName</p>
+        <p class="title-block__description-sales"><i class="fa fa-1 fa-shopping-cart"></i><b>@Model.product.NumberOfSales</b> sales</p>
+    </div>
+    @if (Model.WishLists.Count() == 0)
+    {
+        <form asp-controller="ItemDetail" asp-action="AddToWishlist" asp-route-id=@Model.product.ProductID method="post"><button class="heart-like-button" type="submit"></button></form>
+    }
+    else
+    {
+        if (Model.WishLists[0].Products.Exists(p => p.ProductID == Model.product.ProductID))
+        {
+            <form asp-controller="ItemDetail" asp-action="AddToWishlist"  asp-route-id=@Model.product.ProductID method="post"><button class="heart-like-button liked" type="submit"></button></form>
+        }
+        else
+        {
+            <form asp-controller="ItemDetail" asp-action="AddToWishlist"  asp-route-id=@Model.product.ProductID method="post"><button class="heart-like-button" type="submit"></button></form>
+        }
+    }
+    <div class="detail-row">
+        <a class="sort-button-active" href="">Item details</a>
+        <a class="sort-button left-width-0" asp-action="Index" asp-controller="Review" asp-route-id=@Model.product.ProductID>Reviews</a>
+    </div>
+</div>
+<div class="main-content">
+    <div class="content-row">
+        <div class="image-block">
+            <img class="detail-image" src=@Url.Content(Model.product.ProductImage) />
+        </div>
+        <div class="price-container">
+            <div class="price-container__creator-row">
+                <img class="creator-image" src=@Url.Content(Model.user.Avatar) />
+                <p class="creator-name"><b>@Model.user.UserName</b></p>
+            </div>
+            <div class="rect"></div>
+            <p class="price">@Model.product.Price$</p>
+            <button class="button-hover-addcart button"><span>Buy</span><i class="fa fa-shopping-cart"></i></button>
+        </div>
+    </div>
+    <div class="content-row">
+        <p class="desc-container">
+            @Model.product.Description
+        </p>
+        <div class="characteristics-container">
+            <p class="group-table__info">
+                Published: <span class="inter-text-20px">@Model.product.CreateDate.ToString("dd MMM yyyy", new System.Globalization.CultureInfo("en-US"))</span>
+            </p>
+            <p class="group-table__info">
+                Files included: <span class="inter-text-20px">JS, HTML, CSS</span>
+            </p>
+            <p class="group-table__info">
+                Software version: <span class="inter-text-20px">@Model.product.SoftwareVersion</span>
+            </p>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/sort-buttons-detail.js"></script>
+    <script src="~/js/heart.js"></script>
+}

@@ -1,0 +1,69 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+@section CSS {
+    <link rel="stylesheet" type="text/css" href="~/css/mainpage.css" />
+}
+
+<div class="main-content">
+    <div class="category-row">
+        <div class="category-row__category">
+            <h1 class="category__title">Themes and templates</h1>
+            <p class="category__description">Large range of themes and templates</p>
+            <div class="category__links-row">
+                <a class="links-row__link nav-link" asp-action="Index" asp-controller="Item" asp-route-sort="Newest" asp-route-category="Templates">Newest</a>
+                <a class="links-row__link nav-link" asp-action="Index" asp-controller="Item" asp-route-sort="Bestsellers" asp-route-category="Templates">Bestsellers</a>
+            </div>
+            <img class="category__image" src="Images/template.png" />
+        </div>
+        <div class="category-row__category">
+            <h1 class="category__title">JavaScript</h1>
+            <p class="category__description">Large range of javaScript code</p>
+            <div class="category__links-row">
+                <a class="links-row__link nav-link" asp-action="Index" asp-controller="Item" asp-route-sort="Newest" asp-route-category="JavaScript">Newest</a>
+                <a class="links-row__link nav-link" asp-action="Index" asp-controller="Item" asp-route-sort="Bestsellers" asp-route-category="JavaScript">Bestsellers</a>
+            </div>
+            <img class="category__image" src="Images/JS.png" />
+        </div>
+        <div class="category-row__category">
+            <h1 class="category__title">CSS</h1>
+            <p class="category__description">Large range of CSS code</p>
+            <div class="category__links-row">
+                <a class="links-row__link nav-link" asp-action="Index" asp-controller="Item" asp-route-sort="Newest" asp-route-category="CSS">Newest</a>
+                <a class="links-row__link nav-link" asp-action="Index" asp-controller="Item" asp-route-sort="Bestsellers" asp-route-category="CSS">Bestsellers</a>
+            </div>
+            <img class="category__image" src="Images/CSS.png" />
+        </div>
+    </div>
+    <div class="category-row">
+        <div class="category-row__category">
+            <h1 class="category__title">HTML5</h1>
+            <p class="category__description">Large range of html templates</p>
+            <div class="category__links-row">
+                <a class="links-row__link nav-link" asp-action="Index" asp-controller="Item" asp-route-sort="Newest" asp-route-category="HTML5">Newest</a>
+                <a class="links-row__link nav-link" asp-action="Index" asp-controller="Item" asp-route-sort="Bestsellers" asp-route-category="HTML5">Bestsellers</a>
+            </div>
+            <img class="category__image" src="Images/html.png" />
+        </div>
+        <div class="category-row__category">
+            <h1 class="category__title">Plugins</h1>
+            <p class="category__description">Large range of plugins</p>
+            <div class="category__links-row">
+                <a class="links-row__link nav-link" asp-action="Index" asp-controller="Item" asp-route-sort="Newest" asp-route-category="Plugins">Newest</a>
+                <a class="links-row__link nav-link" asp-action="Index" asp-controller="Item" asp-route-sort="Bestsellers" asp-route-category="Plugins">Bestsellers</a>
+            </div>
+            <img class="category__image" src="Images/plugin.png" />
+        </div>
+        <div class="category-row__category">
+            <h1 class="category__title">PHP scripts</h1>
+            <p class="category__description">Large range of php scripts</p>
+            <div class="category__links-row">
+                <a class="links-row__link nav-link" asp-action="Index" asp-controller="Item" asp-route-sort="Newest" asp-route-category="PHP">Newest</a>
+                <a class="links-row__link nav-link" asp-action="Index" asp-controller="Item" asp-route-sort="Bestsellers" asp-route-category="PHP">Bestsellers</a>
+            </div>
+            <img class="category__image" src="Images/php.png" />
+        </div>
+    </div>
+    <div class="div-block"><a class="div-block__see-btn" asp-action="Index" asp-controller="Item" asp-route-sort="Newest" asp-route-category="All">View all items</a></div>
+</div>

@@ -1,0 +1,266 @@
+﻿@{
+    @model ItemsViewModel;
+    string rating = "";
+    ViewData["Title"] = "Items Page";
+}
+
+@section CSS {
+    <link rel="stylesheet" type="text/css" href="~/css/itemspage.css" />
+}
+
+
+<div class="main-content">
+    <div class="sidebar-absolute">
+        <div class="sidebar">
+            <ul class="nav-links">
+                <li>
+                    <ul class="sub-menu blank">
+                        <li><a class="link_name">Category</a></li>
+                    </ul>
+                </li>
+                <li class="active">
+                    <div class="iocn-link">
+                        <a>
+                            <i class='bx bx-collection'></i>
+                            <span class="link_name">Category</span>
+                        </a>
+                        <i class='bx bxs-chevron-down arrow'></i>
+                    </div>
+                    <ul class="sub-menu">
+                        <li><a class="link_name">Category</a></li>
+                        <li><a asp-action="Index" asp-controller="Item" asp-route-sort=@ViewData["Sort"] asp-route-category="Templates">Web themes</a></li>
+                        <li><a asp-action="Index" asp-controller="Item" asp-route-sort=@ViewData["Sort"] asp-route-category="JavaScript">JavaScript</a></li>
+                        <li><a asp-action="Index" asp-controller="Item" asp-route-sort=@ViewData["Sort"] asp-route-category="CSS">CSS</a></li>
+                        <li><a asp-action="Index" asp-controller="Item" asp-route-sort=@ViewData["Sort"] asp-route-category="HTML5">HTML5</a></li>
+                        <li><a asp-action="Index" asp-controller="Item" asp-route-sort=@ViewData["Sort"] asp-route-category="Plugins">Plugins</a></li>
+                        <li><a asp-action="Index" asp-controller="Item" asp-route-sort=@ViewData["Sort"] asp-route-category="PHP">PHP & MySQL</a></li>
+                        <li><a asp-action="Index" asp-controller="Item" asp-route-sort=@ViewData["Sort"] asp-route-category="All">All</a></li>
+                    </ul>
+                </li>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="main-content__sort-row">
+        @if ((string)ViewData["Category"] == "Templates")
+        {
+            <p class="main-content__desc">@Model.Products.Count() Web themes</p>
+        }
+        @if ((string)ViewData["Category"] == "JavaScript")
+        {
+            <p class="main-content__desc">@Model.Products.Count() JS scripts</p>
+        }
+        @if ((string)ViewData["Category"] == "CSS")
+        {
+            <p class="main-content__desc">@Model.Products.Count() CSS code</p>
+        }
+        @if ((string)ViewData["Category"] == "HTML5")
+        {
+            <p class="main-content__desc">@Model.Products.Count() HTML templates</p>
+        }
+        @if ((string)ViewData["Category"] == "Plugins")
+        {
+            <p class="main-content__desc">@Model.Products.Count() Plugins</p>
+        }
+        @if ((string)ViewData["Category"] == "PHP")
+        {
+            <p class="main-content__desc">@Model.Products.Count() PHP Scripts</p>
+        }
+        @if ((string)ViewData["Category"] == "All")
+        {
+            <p class="main-content__desc">@Model.Products.Count() items in total</p>
+        }
+        @if ((string)ViewData["Sort"] == "Newest")
+        {
+            <a class="sort-button-active margin-30" asp-action="Index" asp-controller="Item" asp-route-sort="Newest" asp-route-category=@ViewData["Category"]>Newest</a>
+        }
+        else
+        {
+            <a class="sort-button margin-30" asp-action="Index" asp-controller="Item" asp-route-sort="Newest" asp-route-category=@ViewData["Category"]>Newest</a>
+        }
+        @if ((string)ViewData["Sort"] == "Bestsellers")
+        {
+            <a class="sort-button-active margin-0" asp-action="Index" asp-controller="Item" asp-route-sort="Bestsellers" asp-route-category=@ViewData["Category"]>Bestsellers</a>
+        }
+        else
+        {
+            <a class="sort-button margin-0" asp-action="Index" asp-controller="Item" asp-route-sort="Bestsellers" asp-route-category=@ViewData["Category"]>Bestsellers</a>
+        }
+        @if ((string)ViewData["Sort"] == "Best rated")
+        {
+            <a class="sort-button-active margin-0" asp-action="Index" asp-controller="Item" asp-route-sort="Best rated" asp-route-category=@ViewData["Category"]>Best rated</a>
+        }
+        else
+        {
+            <a class="sort-button margin-0" asp-action="Index" asp-controller="Item" asp-route-sort="Best rated" asp-route-category=@ViewData["Category"]>Best rated</a>
+        }
+        @if ((string)ViewData["Sort"] == "Price")
+        {
+            <a class="sort-button-active margin-0" asp-action="Index" asp-controller="Item" asp-route-sort="Price" asp-route-category=@ViewData["Category"]>Price</a>
+        }
+        else
+        {
+            <a class="sort-button margin-0" asp-action="Index" asp-controller="Item" asp-route-sort="Price" asp-route-category=@ViewData["Category"]>Price</a>
+        }
+    </div>
+    @foreach (var item in Model.Products)
+    {
+        <div class="item-block">
+            <img class="item-block__image" src=@Url.Content(item.ProductImage) />
+            <div class="item-block-column">
+                <a class="nav-2" asp-action="Index" asp-controller="ItemDetail" asp-route-id=@item.ProductID>
+                    <h1 class="item-block-column__title">
+                        @item.ProductTitle
+                    </h1>
+                </a>
+                <p class="item-block-column__description">
+                    by @Model.Users.FirstOrDefault(u => u.Id == item.UserID).UserName
+                </p>
+                <div class="item-block-column-category">
+                    <p class="item-block-column-category__category">Software version:<span class="item-block-column-category__text">@item.SoftwareVersion</span></p>
+                    <p class="item-block-column-category__category">File types included:<span class="item-block-column-category__text">HTML</span></p>
+                    @{
+                        var reviews = Model.Reviews.Where(r => r.ProductID == item.ProductID).ToList();
+                        if (reviews.Count() != 0)
+                        {
+                            rating = reviews.Average(r => r.Grade).ToString("F1");
+                        }
+                        else
+                        {
+                            rating = "-";
+                        }
+                    }
+                    @if (rating == "-")
+                    {
+                        <p class="item-block-column-category__category">Rating:<span class="item-block-column-category__text-grade default">@rating</span></p>
+                    }
+                    else
+                    {
+                        @if (Convert.ToDouble(rating) > 7)
+                        {
+                            <p class="item-block-column-category__category">Rating:<span class="item-block-column-category__text-grade green">@rating</span></p>
+                        }
+                        else
+                        {
+                            @if (Convert.ToDouble(rating) < 4)
+                            {
+                                <p class="item-block-column-category__category">Rating:<span class="item-block-column-category__text-grade red">@rating</span></p>
+                            }
+                            else
+                            {
+                                <p class="item-block-column-category__category">Rating:<span class="item-block-column-category__text-grade yellow">@rating</span></p>
+                            }
+                        }
+                    }
+                </div>
+            </div>
+            <div class="vert-rect"></div>
+            <div class="price-column">
+                @if (Model.WishLists.Count() == 0)
+                {
+                    <form asp-controller="Item" asp-action="AddToWishlist" asp-route-sort=@ViewData["Sort"] asp-route-category=@ViewData["Category"] method="post"><button name="id" class="heart-like-button" type="submit" value=@item.ProductID></button></form>
+                }
+                else
+                {
+                    if (Model.WishLists[0].Products.Exists(p => p.ProductID == item.ProductID))
+                    {
+                        <form asp-controller="Item" asp-action="AddToWishlist" asp-route-sort=@ViewData["Sort"] asp-route-category=@ViewData["Category"] method="post"><button name="id" class="heart-like-button liked" type="submit" value=@item.ProductID></button></form>
+                    }
+                    else
+                    {
+                        <form asp-controller="Item" asp-action="AddToWishlist" asp-route-sort=@ViewData["Sort"] asp-route-category=@ViewData["Category"] method="post"><button name="id" class="heart-like-button" type="submit" value=@item.ProductID></button></form>
+                    }
+                }
+                <p class="price">@item.Price$</p>
+                <p class="desc">@item.NumberOfSales Sales</p>
+                <p class="desc">Created: @item.CreateDate.ToString("dd MMM yyyy", new System.Globalization.CultureInfo("en-US"))</p>
+                <button class="button-hover-addcart button"><span>Buy</span><i class="fa fa-shopping-cart"></i></button>
+            </div>
+        </div>
+    }
+    @*<div class="item-block">
+            <img class="item-block__image" src="Images/itemimage.png" />
+            <div class="item-block-column">
+                <a class="nav-2" asp-action="Index" asp-controller="ItemDetail">
+                    <h1 class="item-block-column__title">
+                        eCommerce templates
+                    </h1>
+                </a>
+                <p class="item-block-column__description">
+                    by TheRemedy
+                </p>
+                <div class="item-block-column-category">
+                    <p class="item-block-column-category__category">Software version:<span class="item-block-column-category__text">HTML 5.x</span></p>
+                    <p class="item-block-column-category__category">File types included:<span class="item-block-column-category__text">HTML</span></p>
+                    <p class="item-block-column-category__category">Rating:<span class="item-block-column-category__text-grade">8.3</span></p>
+                </div>
+            </div>
+            <div class="vert-rect"></div>
+            <div class="price-column">
+                <div class="heart-like-button"></div>
+                <p class="price">22$</p>
+                <p class="desc">123 Sales</p>
+                <p class="desc">Created: 24 Jun 23</p>
+                <button class="button-hover-addcart button"><span>Buy</span><i class="fa fa-shopping-cart"></i></button>
+            </div>
+        </div>
+        <div class="item-block">
+            <img class="item-block__image" src="Images/itemimage.png" />
+            <div class="item-block-column">
+                <a class="nav-2" asp-action="Index" asp-controller="ItemDetail">
+                    <h1 class="item-block-column__title">
+                        eCommerce templates
+                    </h1>
+                </a>
+                <p class="item-block-column__description">
+                    by TheRemedy
+                </p>
+                <div class="item-block-column-category">
+                    <p class="item-block-column-category__category">Software version:<span class="item-block-column-category__text">HTML 5.x</span></p>
+                    <p class="item-block-column-category__category">File types included:<span class="item-block-column-category__text">HTML</span></p>
+                    <p class="item-block-column-category__category">Rating:<span class="item-block-column-category__text-grade">8.3</span></p>
+                </div>
+            </div>
+            <div class="vert-rect"></div>
+            <div class="price-column">
+                <div class="heart-like-button"></div>
+                <p class="price">22$</p>
+                <p class="desc">123 Sales</p>
+                <p class="desc">Created: 24 Jun 23</p>
+                <button class="button-hover-addcart button"><span>Buy</span><i class="fa fa-shopping-cart"></i></button>
+            </div>
+        </div>
+        <div class="item-block">
+            <img class="item-block__image" src="Images/itemimage.png" />
+            <div class="item-block-column">
+                <a class="nav-2" asp-action="Index" asp-controller="ItemDetail">
+                    <h1 class="item-block-column__title">
+                        eCommerce templates
+                    </h1>
+                </a>
+                <p class="item-block-column__description">
+                    by TheRemedy
+                </p>
+                <div class="item-block-column-category">
+                    <p class="item-block-column-category__category">Software version:<span class="item-block-column-category__text">HTML 5.x</span></p>
+                    <p class="item-block-column-category__category">File types included:<span class="item-block-column-category__text">HTML</span></p>
+                    <p class="item-block-column-category__category">Rating:<span class="item-block-column-category__text-grade">8.3</span></p>
+                </div>
+            </div>
+            <div class="vert-rect"></div>
+            <div class="price-column">
+                <div class="heart-like-button"></div>
+                <p class="price">22$</p>
+                <p class="desc">123 Sales</p>
+                <p class="desc">Created: 24 Jun 23</p>
+                <button class="button-hover-addcart button"><span>Buy</span><i class="fa fa-shopping-cart"></i></button>
+            </div>
+        </div>*@
+</div>
+
+@section Scripts
+{
+    <script src="~/js/dropdown.js"></script>
+    <script src="~/js/heart.js"></script>
+}
+@*<script src="~/js/sort-buttons.js"></script>*@
