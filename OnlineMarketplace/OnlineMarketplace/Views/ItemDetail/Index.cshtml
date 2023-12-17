@@ -40,11 +40,32 @@
         <div class="price-container">
             <div class="price-container__creator-row">
                 <img class="creator-image" src=@Url.Content(Model.user.Avatar) />
-                <p class="creator-name"><b>@Model.user.UserName</b></p>
+                <div class="user-details-col">
+                    <p class="creator-name"><b>@Model.user.UserName</b></p>
+                    <p class="user-details-col__info">
+                        Name: <span class="inter-text-12px">@Model.user.Name</span>
+                    </p>
+                    <p class="user-details-col__info">
+                        Last name: <span class="inter-text-12px">@Model.user.LastName</span>
+                    </p>
+                    <p class="user-details-col__info">
+                        Email: <span class="inter-text-12px">@Model.user.Email</span>
+                    </p>
+                    <p class="user-details-col__info">
+                        Birth date: <span class="inter-text-12px">@Model.user.Date_of_birth.ToString("dd MMMM yyyy", new System.Globalization.CultureInfo("en-US"))</span>
+                    </p>
+                </div>
             </div>
             <div class="rect"></div>
             <p class="price">@Model.product.Price$</p>
-            <button class="button-hover-addcart button"><span>Buy</span><i class="fa fa-shopping-cart"></i></button>
+            @if (Model.product.Is_Deleted)
+            {
+                <p class="unavailable-text">Product unavailable at this moment</p>
+            }
+            else
+            {
+                <button class="button-hover-addcart button"><span>Buy</span><i class="fa fa-shopping-cart"></i></button>
+            }
         </div>
     </div>
     <div class="content-row">

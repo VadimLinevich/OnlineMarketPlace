@@ -97,7 +97,37 @@ a span.regular-green {
 
 a.header-row__start-selling {
     display: block;
-    width: 117px;
+    min-width: 117px;
+    text-decoration: none;
+    color: #BCBCBC;
+    font-family: Inter;
+    font-size: 20px;
+    font-weight: normal;
+    font-style: normal;
+    margin-left: 493px;
+    margin-top: 37px;
+}
+
+button.header-row__start-selling {
+    cursor: pointer;
+    background:none;
+    border: none;
+    display: block;
+    min-width: 117px;
+    text-decoration: none;
+    color: #BCBCBC;
+    font-family: Inter;
+    font-size: 20px;
+    font-weight: normal;
+    font-style: normal;
+    margin-left: 493px;
+    margin-top: 37px;
+}
+
+
+p.header-row__seller {
+    display: block;
+    min-width: 117px;
     text-decoration: none;
     color: #BCBCBC;
     font-family: Inter;
@@ -141,6 +171,20 @@ a.nav::after{
 }
 
 a.nav:hover::after{
+    width: 100%;
+}
+
+button.nav::after {
+    content: '';
+    background: white;
+    width: 0%;
+    height: 4px;
+    display: block;
+    margin: auto;
+    transition: 0.5s;
+}
+
+button.nav:hover::after {
     width: 100%;
 }
 

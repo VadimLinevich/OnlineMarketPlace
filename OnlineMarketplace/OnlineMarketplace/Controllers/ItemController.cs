@@ -20,7 +20,7 @@ namespace OnlineMarketplace.Controllers
             dbcontext = dbContext;
             usermanager = userManager;
         }
-        public async Task<IActionResult> Index(string sort = "Newest", string category = "All")
+        public async Task<IActionResult> Index(string sort = "Newest", string category = "All", string q = "")
         {
             var user = await usermanager.GetUserAsync(HttpContext.User);
             List<WishList> wishlists = new List<WishList>();
@@ -31,6 +31,12 @@ namespace OnlineMarketplace.Controllers
             var users = dbcontext.Users.ToList();
             var products = dbcontext.Product.Where(p => p.Is_Deleted == false).ToList();
             var reviews = dbcontext.Review.ToList();
+            if (!String.IsNullOrEmpty(q))
+            {
+                products = products.Where(s => s.ProductTitle.Contains(q) || s.ProductTitle.Contains(q.ToUpper())).ToList();
+                category = "All";
+                sort = "Newest";
+            }
             if (category != "All")
             {
                 products = dbcontext.Product.Where(p => p.Category!.CategoryName == category && p.Is_Deleted == false).ToList();
@@ -53,6 +59,7 @@ namespace OnlineMarketplace.Controllers
             }
             ViewData["Sort"] = sort;
             ViewData["Category"] = category;
+            ViewData["SearchString"] = q;
             ItemsViewModel itemsViewModel = new ItemsViewModel { Users = users, Products = products, Reviews = reviews, WishLists = wishlists };
             return View(itemsViewModel);
         }
@@ -60,7 +67,7 @@ namespace OnlineMarketplace.Controllers
         [Authorize]
         [HttpPost]
         [Route("Item")]
-        public async Task<IActionResult> AddToWishlist(int? id, string sort = "Newest", string category = "All")
+        public async Task<IActionResult> AddToWishlist(int? id, string sort = "Newest", string category = "All", string q = "")
         {
             if (id != null)
             {
@@ -78,7 +85,7 @@ namespace OnlineMarketplace.Controllers
                     wishlist.Products.Add(product);
                     dbcontext.SaveChanges();
                 }
-                return RedirectToAction("Index", new {sort = sort, category = category });
+                return RedirectToAction("Index", new {sort = sort, category = category, q = q });
             }
             return RedirectToAction("Index");
         }

@@ -204,7 +204,7 @@ h1.title-block__title {
     border-color:rgb(150, 150, 150);
     border-radius: 5px;
     width: 280px;
-    height: 355px;
+    min-height: 355px;
     padding: 10px;
 }
 
@@ -237,6 +237,7 @@ p.price {
 .creator-image {
     height: 100px;
     width: 100px;
+    border: 1px solid;
 }
 
 .creator-name {
@@ -337,6 +338,7 @@ p.price {
     font-family: Inter;
     font-size: 20px;
     font-weight: 700;
+    word-break: break-word;
 }
 
 .inter-text-20px {
@@ -344,6 +346,39 @@ p.price {
     font-family: Inter;
     font-size: 20px;
     font-weight: 400;
+}
+
+.user-details-col {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+
+.user-details-col__info {
+    height: auto;
+    color: black;
+    font-family: 'Poppins', sans-serif;
+    font-size: 12px;
+    height: auto;
+    font-weight: bold;
+    word-break: break-word;
+}
+
+.inter-text-12px {
+    color: black;
+    font-family: 'Poppins', sans-serif;
+    font-size: 12px;
+    font-weight: normal;
+}
+
+.unavailable-text {
+    height: auto;
+    color: black;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    height: auto;
+    word-break: break-word;
+    align-self: center;
 }
 
 

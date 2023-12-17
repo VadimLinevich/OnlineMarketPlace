@@ -8,6 +8,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap"
           rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+          rel="stylesheet" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined"
           rel="stylesheet" />
     <link rel='stylesheet' href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css'>
@@ -18,37 +20,12 @@
 <header>
     <div class="header-row">
         <a class="header-row__codemarket" asp-action="Index" asp-controller="Home">Code<span class="regular-green">Market</span></a>
-        <form action="" class="search-container">
+        <form asp-controller="Item" asp-action="Index" class="search-container" method="get">
             <input type="search" name="q" placeholder="Search...">
             <button type="submit" class="search-container__searchbtn"><img class="header-row__search-img" src="~/Images/search2-removebg-preview.png" /></button>
         </form>
-        <a class="header-row__start-selling nav" asp-action="" asp-controller="">Start selling</a>
+        @*<a class="header-row__start-selling nav" asp-action="" asp-controller="">Start selling</a>*@
         <partial name="_LoginPartial" />
-        @*<a class="header-row__sign-in nav" asp-area="Identity" asp-page="/Account/Login">Sign in</a>*@
-        @*<nav class="header-nav">
-            <ul class="header-ul">
-                <li class="header-li">
-                    <img src="images/profile-80x80.jpg" class="profile" />
-                    <ul class="header-ul">
-                        <li class="header-li sub-item non-pointer">
-                            <p>MSTdev</p>
-                        </li>
-                        <li class="header-li sub-item">
-                            <span class="material-icons-outlined"> grid_view </span>
-                            <a href="#">Dashboard</a>
-                        </li>
-                        <li class="header-li sub-item">
-                            <span class="material-icons-outlined"> manage_accounts </span>
-                            <a>Update Profile</a>
-                        </li>
-                        <li class="header-li sub-item">
-                            <span class="material-icons-outlined"> logout </span>
-                            <a>Logout</a>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-        </nav>*@
     </div>
     <div class="header-row-2">
         <a class="nav" asp-action="Index" asp-controller="Item" asp-route-sort="Newest" asp-route-category="Templates">Web themes & templates</a>

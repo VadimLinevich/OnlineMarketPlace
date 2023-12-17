@@ -73,7 +73,11 @@ namespace OnlineMarketplace.Entities
             List<Category> Categories = new List<Category>
             {
                 new Category { CategoryName = "Templates" },
-                new Category { CategoryName = "JavaScript" }
+                new Category { CategoryName = "JavaScript" },
+                new Category { CategoryName = "CSS" },
+                new Category { CategoryName = "HTML5" },
+                new Category { CategoryName = "Plugins" },
+                new Category { CategoryName = "PHP" }
             };
 
             if(dbContext.Category.IsNullOrEmpty())
@@ -81,6 +85,19 @@ namespace OnlineMarketplace.Entities
                 foreach (Category category in Categories)
                 {
                     await dbContext.Category.AddAsync(category);
+                }
+            }
+
+            List<Sale> Sales = new List<Sale>
+            {
+                new Sale { UserID = "48043fe3-523f-4c81-acba-17204e0da154", ProductID = 3, SaleDate = DateTime.Now }
+            };
+
+            if (dbContext.Sale.IsNullOrEmpty())
+            {
+                foreach (Sale sale in Sales)
+                {
+                    await dbContext.Sale.AddAsync(sale);
                 }
             }
 

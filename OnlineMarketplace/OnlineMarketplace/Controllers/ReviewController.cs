@@ -62,7 +62,7 @@ namespace OnlineMarketplace.Controllers
             {
                 if (!User.Identity.IsAuthenticated)
                 {
-                    return RedirectToPage("/Account/Login", new { area = "Identity", returnUrl = $"/Review/Index/{id}" }); ;
+                    return RedirectToPage("/Account/Login", new { area = "Identity", returnUrl = $"/Review/Index/{id}" });
                 }
                 var user = await usermanager.GetUserAsync(HttpContext.User);
                 review.UserID = user.Id;

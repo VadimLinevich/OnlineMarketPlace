@@ -32,6 +32,8 @@ namespace OnlineMarketplace.Entities
         public string SoftwareVersion { get; set; }
 
         [Required]
+        [RegularExpression(@"^\d+(\,\d{1,2})?$", ErrorMessage = "Enter correct positive value (Max 2 decimal places)")]
+        [Range(0.50, 10000.00, ErrorMessage = "Price should be at least 0.50 and at max 10000.00")]
         [Precision(8, 2)]
         public decimal Price { get; set; }
 

@@ -1,0 +1,164 @@
+﻿@page
+@model OnlineMarketplace.Areas.Profile.Pages.Dashboard.EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+@if (!SignInManager.IsSignedIn(User) || await UserManager.IsInRoleAsync(Model.user, "user"))
+{
+    Response.Redirect("/");
+}
+else
+{
+    @section CSS {
+        <link rel="stylesheet" type="text/css" href="~/css/profile.css" />
+        <link rel="stylesheet" type="text/css" href="~/css/settings.css" />
+    }
+    <div class="title-block">
+        <div class="user-row">
+            <img class="user-image" src=@Url.Content(Model.user.Avatar) />
+            <div class="user-details-col">
+                <p class="user-name"><b>@Model.user.UserName</b></p>
+                <p class="user-details-col__info">
+                    Name: <span class="inter-text-12px">@Model.user.Name</span>
+                </p>
+                <p class="user-details-col__info">
+                    Last name: <span class="inter-text-12px">@Model.user.LastName</span>
+                </p>
+                <p class="user-details-col__info">
+                    Email: <span class="inter-text-12px">@Model.user.Email</span>
+                </p>
+                <p class="user-details-col__info">
+                    Birth date: <span class="inter-text-12px">@Model.user.Date_of_birth.ToString("dd MMMM yyyy", new System.Globalization.CultureInfo("en-US"))</span>
+                </p>
+            </div>
+        </div>
+        <div class="detail-row">
+            <a class="sort-button-active" asp-area="Profile" asp-page="/Dashboard/Index">Dashboard</a>
+            <a class="sort-button left-width-0" asp-area="Profile" asp-page="/Downloads/Index">Downloads</a>
+            <a class="sort-button left-width-0" asp-area="Profile" asp-page="/Reviews/Index">Reviews</a>
+            <a class="sort-button left-width-0" asp-area="Profile" asp-page="/Wishlist/Index">Wishlist</a>
+            <a class="sort-button left-width-0" asp-area="Profile" asp-page="/Settings/Edit">Settings</a>
+        </div>
+    </div>
+    <div class="main-content">
+        <div class="content-column">
+            <p class="sign-in-title">Update your product</p>
+            <form class="login-form" method="post" enctype="multipart/form-data">
+                <p class="label">Title:</p>
+                <div asp-validation-summary="ModelOnly" class="login-form__error"></div>
+                <input type="hidden" asp-for="Product.ProductID" />
+                <input asp-for="Product.ProductTitle" required class="login-form__input" placeholder="Title...">
+                <span asp-validation-for="Product.ProductTitle" class="login-form__error"></span>
+                <p class="label">Description:</p>
+                <textarea class="rev-container__rev-content" asp-for="Product.Description" required id="review" placeholder="Enter..."></textarea>
+                <span asp-validation-for="Product.Description" class="login-form__error"></span>
+                <p class="label">Avatar:</p>
+                <input type="file" name="uploadedFile" />
+                <p class="label">Category:</p>
+                <select asp-for="Product.CategoryID" class="login-form__input" asp-items="ViewBag.CategoryID"></select>
+                <p class="label">Software:</p>
+                <input asp-for="Product.SoftwareVersion" required class="login-form__input" placeholder="Software...">
+                <span asp-validation-for="Product.SoftwareVersion" class="login-form__error"></span>
+                <p class="label">Price:</p>
+                <input asp-for="Product.Price" required class="login-form__input" placeholder="Price...">
+                <span asp-validation-for="Product.Price" class="login-form__error"></span>
+                <p class="label">Delete? <input class="login-form__check" asp-for="Product.Is_Deleted" /> </p>
+                <button type="submit" class="login-form__log-in">Update</button>
+            </form>
+        </div>
+    </div>
+    @section Scripts {
+        <script src="js/sort-buttons-detail.js"></script>
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+        <script>
+
+            $.validator.methods.range = function (value, element, param) {
+                var globalizedValue = value.replace(",", ".");
+                return this.optional(element) || (globalizedValue >= param[0] && globalizedValue <= param[1]);
+            }
+
+            $.validator.methods.number = function (value, element) {
+                return this.optional(element) || /-?(?:\d+|\d{1,3}(?:[\s\.,]\d{3})+)(?:[\.,]\d+)?$/.test(value);
+            }
+
+        </script>
+    }
+}
+
+@*<h1>Edit</h1>
+
+    <h4>Product</h4>
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            <form method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="Product.ProductID" />
+                <div class="form-group">
+                    <label asp-for="Product.UserID" class="control-label"></label>
+                    <select asp-for="Product.UserID" class="form-control" asp-items="ViewBag.UserID"></select>
+                    <span asp-validation-for="Product.UserID" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Product.CategoryID" class="control-label"></label>
+                    <select asp-for="Product.CategoryID" class="form-control" asp-items="ViewBag.CategoryID"></select>
+                    <span asp-validation-for="Product.CategoryID" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Product.ProductTitle" class="control-label"></label>
+                    <input asp-for="Product.ProductTitle" class="form-control" />
+                    <span asp-validation-for="Product.ProductTitle" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Product.Description" class="control-label"></label>
+                    <input asp-for="Product.Description" class="form-control" />
+                    <span asp-validation-for="Product.Description" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Product.ProductImage" class="control-label"></label>
+                    <input asp-for="Product.ProductImage" class="form-control" />
+                    <span asp-validation-for="Product.ProductImage" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Product.SoftwareVersion" class="control-label"></label>
+                    <input asp-for="Product.SoftwareVersion" class="form-control" />
+                    <span asp-validation-for="Product.SoftwareVersion" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Product.Price" class="control-label"></label>
+                    <input asp-for="Product.Price" class="form-control" />
+                    <span asp-validation-for="Product.Price" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Product.NumberOfSales" class="control-label"></label>
+                    <input asp-for="Product.NumberOfSales" class="form-control" />
+                    <span asp-validation-for="Product.NumberOfSales" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Product.CreateDate" class="control-label"></label>
+                    <input asp-for="Product.CreateDate" class="form-control" />
+                    <span asp-validation-for="Product.CreateDate" class="text-danger"></span>
+                </div>
+                <div class="form-group form-check">
+                    <label class="form-check-label">
+                        <input class="form-check-input" asp-for="Product.Is_Deleted" /> @Html.DisplayNameFor(model => model.Product.Is_Deleted)
+                    </label>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div>
+        <a asp-page="./Index">Back to List</a>
+    </div>*@
+@*
+    @section Scripts {
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    }
+*@

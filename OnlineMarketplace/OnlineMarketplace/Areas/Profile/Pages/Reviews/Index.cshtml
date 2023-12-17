@@ -1,0 +1,96 @@
+﻿@page
+@model OnlineMarketplace.Areas.Profile.Pages.Reviews.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+@inject SignInManager<ApplicationUser> SignInManager
+@if (!SignInManager.IsSignedIn(User))
+{
+    Response.Redirect("/");
+}
+else
+{
+    @section CSS {
+        <link rel="stylesheet" type="text/css" href="~/css/profile.css" />
+        <link rel="stylesheet" type="text/css" href="~/css/profile-reviews.css" />
+    }
+
+    <div class="title-block">
+        <div class="user-row">
+            <img class="user-image" src=@Url.Content(Model.user.Avatar) />
+            <div class="user-details-col">
+                <p class="user-name"><b>@Model.user.UserName</b></p>
+                <p class="user-details-col__info">
+                    Name: <span class="inter-text-12px">@Model.user.Name</span>
+                </p>
+                <p class="user-details-col__info">
+                    Last name: <span class="inter-text-12px">@Model.user.LastName</span>
+                </p>
+                <p class="user-details-col__info">
+                    Email: <span class="inter-text-12px">@Model.user.Email</span>
+                </p>
+                <p class="user-details-col__info">
+                    Birth date: <span class="inter-text-12px">@Model.user.Date_of_birth.ToString("dd MMMM yyyy", new System.Globalization.CultureInfo("en-US"))</span>
+                </p>
+            </div>
+        </div>
+        <div class="detail-row">
+            <a class="sort-button" asp-area="Profile" asp-page="/Dashboard/Index">Dashboard</a>
+            <a class="sort-button left-width-0" asp-area="Profile" asp-page="/Downloads/Index">Downloads</a>
+            <a class="sort-button-active left-width-0" asp-area="Profile" asp-page="/Reviews/Index">Reviews</a>
+            <a class="sort-button left-width-0" asp-area="Profile" asp-page="/Wishlist/Index">Wishlist</a>
+            <a class="sort-button left-width-0" asp-area="Profile" asp-page="/Settings/Edit">Settings</a>
+        </div>
+    </div>
+    <div class="main-content">
+        <div class="content-column">
+            @if (Model.Reviews.Count() == 0)
+            {
+                <p class="reviews-number-text">0 Reviews</p>
+                <div class="rect"></div>
+            }
+            else
+            {
+                <p class="reviews-number-text">@Model.Reviews.Count() Reviews</p>
+                <div class="rect"></div>
+                @foreach (var item in Model.Reviews)
+                {
+                    <div class="rev-col">
+                        <div class="review-title">
+                            <div class="review-title-row">
+                                @if (item.Grade > 7)
+                                {
+                                    <span class="text-grade green">@item.Grade</span>
+                                }
+                                else
+                                {
+                                    if (item.Grade < 4)
+                                    {
+                                        <span class="text-grade red">@item.Grade</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-grade yellow">@item.Grade</span>
+                                    }
+                                }
+                                <span class="reviews-title-text">For</span> <p class="reviews-title-text"><a class="nav-2" asp-action="Index" asp-controller="ItemDetail" asp-route-id=@item.ProductID><b>@Model.Products.FirstOrDefault(p => p.ProductID == item.ProductID).ProductTitle</b></a></p>
+                            </div>
+                        </div>
+                        <div class="review-content">
+                            <p class="reviews-desc">@item.Content</p>
+                        </div>
+                    </div>
+                    <form class="button-row" method="post">
+                        <button class="delete-btn" type="submit" asp-route-productId=@Model.Products.FirstOrDefault(p => p.ProductID == item.ProductID).ProductID asp-route-userId=@Model.user.Id asp-page="Delete"><i class="fa fa-trash"></i>&nbspDelete</button>
+                        <a class="edit-btn" asp-action="Index" asp-controller="Review" asp-route-id=@Model.Products.FirstOrDefault(p => p.ProductID == item.ProductID).ProductID><i class="fa fa-edit"></i>&nbspEdit</a>
+                    </form>
+                }
+            }
+        </div>
+    </div>
+    @section Scripts {
+        <script src="js/sort-buttons-detail.js"></script>
+    }
+}

@@ -1,0 +1,107 @@
+.content-column {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-top: 20px;
+    padding-left: 150px;
+    padding-right: 150px;
+    align-items: center;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    width: 420px;
+    height: auto;
+    border-width: 2px;
+    border-style: solid;
+    background-color: white;
+    border-color: rgb(150, 150, 150);
+    border-radius: 5px;
+    padding: 15px;
+}
+
+p.label {
+    text-decoration: none;
+    color: black;
+    font-family: 'Poppins', sans-serif;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.login-form__input {
+    background-color: white;
+    border: 1px solid;
+    border-color: #7e7e7e;
+    border-radius: 5px;
+    margin-top: 5px;
+    height: 60px;
+    /* width: 440px; */
+    color: black;
+    font-size: 24px;
+    font-family: Inter;
+    font-weight: 400;
+    padding-left: 10px;
+}
+
+.login-form__check {
+    width: 20px;
+    height: 20px;
+}
+
+.login-form__log-in {
+    cursor: pointer;
+    background-color: #30C018;
+    border: none;
+    border-radius: 10px;
+    margin-top: 30px;
+    /* margin-left: 25px; */
+    align-self: center;
+    height: 60px;
+    width: 400px;
+    color: white;
+    font-family: Inter;
+    font-size: 24px;
+    font-weight: 400;
+}
+
+.login-form__log-in:hover {
+    color: black;
+}
+
+.login-form__error {
+    color: #ff0000;
+    font-family: Inter;
+    font-size: 16px;
+    font-weight: 400;
+    align-self: center;
+}
+
+.sign-in-title {
+    color: black;
+    font-family: Inter;
+    font-size: 48px;
+    font-weight: 400;
+    /* margin-top: 300px; */
+    /* margin-left: 50px; */
+}
+
+.login-form__error ul {
+    list-style-type: none;
+}
+
+.rev-container__rev-content {
+    padding-top: 10px;
+    padding-left: 10px;
+    margin-top: 5px;
+    background-color: white;
+    border: 1px solid;
+    border-color: black;
+    height: 170px;
+    width: auto;
+    font-size: 16px;
+    font-family: Inter;
+    font-weight: 400;
+    color: black;
+    resize: none;
+}

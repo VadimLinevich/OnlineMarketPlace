@@ -1,0 +1,73 @@
+﻿@page
+@model OnlineMarketplace.Areas.Profile.Pages.Settings.EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+@inject SignInManager<ApplicationUser> SignInManager
+@if (!SignInManager.IsSignedIn(User))
+{
+    Response.Redirect("/");
+}
+else
+{
+    @section CSS {
+        <link rel="stylesheet" type="text/css" href="~/css/profile.css" />
+        <link rel="stylesheet" type="text/css" href="~/css/settings.css" />
+    }
+    <div class="title-block">
+        <div class="user-row">
+            <img class="user-image" src=@Url.Content(Model.user.Avatar) />
+            <div class="user-details-col">
+                <p class="user-name"><b>@Model.user.UserName</b></p>
+                <p class="user-details-col__info">
+                    Name: <span class="inter-text-12px">@Model.user.Name</span>
+                </p>
+                <p class="user-details-col__info">
+                    Last name: <span class="inter-text-12px">@Model.user.LastName</span>
+                </p>
+                <p class="user-details-col__info">
+                    Email: <span class="inter-text-12px">@Model.user.Email</span>
+                </p>
+                <p class="user-details-col__info">
+                    Birth date: <span class="inter-text-12px">@Model.user.Date_of_birth.ToString("dd MMMM yyyy", new System.Globalization.CultureInfo("en-US"))</span>
+                </p>
+            </div>
+        </div>
+        <div class="detail-row">
+            <a class="sort-button" asp-area="Profile" asp-page="/Dashboard/Index">Dashboard</a>
+            <a class="sort-button left-width-0" asp-area="Profile" asp-page="/Downloads/Index">Downloads</a>
+            <a class="sort-button left-width-0" asp-area="Profile" asp-page="/Reviews/Index">Reviews</a>
+            <a class="sort-button left-width-0" asp-area="Profile" asp-page="/Wishlist/Index">Wishlist</a>
+            <a class="sort-button-active left-width-0" asp-area="Profile" asp-page="/Settings/Edit">Settings</a>
+        </div>
+    </div>
+    <div class="main-content">
+        <div class="content-column">
+            <p class="sign-in-title">Change your information</p>
+            <form class="login-form" method="post" enctype="multipart/form-data">
+                <p class="label">Email:</p>
+                <div asp-validation-summary="ModelOnly" class="login-form__error"></div>
+                <input asp-for="user.Email" type="email" required class="login-form__input" placeholder="Email...">
+                <span asp-validation-for="user.Email" class="login-form__error"></span>
+                <p class="label">Username:</p>
+                <input asp-for="user.UserName" required class="login-form__input" placeholder="LastName...">
+                <span asp-validation-for="user.UserName" class="login-form__error"></span>
+                <p class="label">Avatar:</p>
+                <input type="file" name="uploadedFile"/>
+                <p class="label">Name:</p>
+                <input asp-for="user.Name" required class="login-form__input" placeholder="Name...">
+                <span asp-validation-for="user.Name" class="login-form__error"></span>
+                <p class="label">Last name:</p>
+                <input asp-for="user.LastName" required class="login-form__input" placeholder="LastName...">
+                <span asp-validation-for="user.LastName" class="login-form__error"></span>
+                <button type="submit" class="login-form__log-in">Update</button>
+            </form>
+        </div>
+    </div>
+    @section Scripts {
+        <script src="js/sort-buttons-detail.js"></script>
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    }
+}

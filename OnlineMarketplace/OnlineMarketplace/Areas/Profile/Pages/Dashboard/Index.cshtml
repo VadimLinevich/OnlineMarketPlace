@@ -1,0 +1,123 @@
+﻿@page
+@model OnlineMarketplace.Areas.Profile.Pages.Dashboard.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+    string rating = "";
+}
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+@if (!SignInManager.IsSignedIn(User))
+{
+    Response.Redirect("/");
+}
+else
+{
+    @section CSS {
+        <link rel="stylesheet" type="text/css" href="~/css/profile.css" />
+        <link rel="stylesheet" type="text/css" href="~/css/dashboard.css" />
+    }
+    <div class="title-block">
+        <div class="user-row">
+            <img class="user-image" src=@Url.Content(Model.user.Avatar) />
+            <div class="user-details-col">
+                <p class="user-name"><b>@Model.user.UserName</b></p>
+                <p class="user-details-col__info">
+                    Name: <span class="inter-text-12px">@Model.user.Name</span>
+                </p>
+                <p class="user-details-col__info">
+                    Last name: <span class="inter-text-12px">@Model.user.LastName</span>
+                </p>
+                <p class="user-details-col__info">
+                    Email: <span class="inter-text-12px">@Model.user.Email</span>
+                </p>
+                <p class="user-details-col__info">
+                    Birth date: <span class="inter-text-12px">@Model.user.Date_of_birth.ToString("dd MMMM yyyy", new System.Globalization.CultureInfo("en-US"))</span>
+                </p>
+            </div>
+        </div>
+        <div class="detail-row">
+            <a class="sort-button-active" asp-area="Profile" asp-page="/Dashboard/Index">Dashboard</a>
+            <a class="sort-button left-width-0" asp-area="Profile" asp-page="/Downloads/Index">Downloads</a>
+            <a class="sort-button left-width-0" asp-area="Profile" asp-page="/Reviews/Index">Reviews</a>
+            <a class="sort-button left-width-0" asp-area="Profile" asp-page="/Wishlist/Index">Wishlist</a>
+            <a class="sort-button left-width-0" asp-area="Profile" asp-page="/Settings/Edit">Settings</a>
+        </div>
+    </div>
+    <div class="main-content">
+        <div class="content-column">
+            @if (Model.Products.Count() == 0)
+            {
+                <p class="reviews-number-text">You are not selling anything at the moment</p>
+            }
+            else
+            {
+                @foreach (var item in Model.Products)
+                {
+                    <div class="item-block">
+                        <img class="item-block__image" src=@Url.Content(item.ProductImage) />
+                        <div class="item-block-column">
+                            <a class="nav-2" asp-action="Index" asp-controller="ItemDetail" asp-route-id=@item.ProductID>
+                                <h1 class="item-block-column__title">
+                                    @item.ProductTitle
+                                </h1>
+                            </a>
+                            <div class="item-block-column-category">
+                                <p class="item-block-column-category__category">Sales:<span class="item-block-column-category__text">@item.NumberOfSales</span></p>
+                                <p class="item-block-column-category__category">Price:<span class="item-block-column-category__text">@item.Price$</span></p>
+                                @{
+                                    var reviews = Model.Reviews.Where(r => r.ProductID == item.ProductID).ToList();
+                                    if (reviews.Count() != 0)
+                                    {
+                                        rating = reviews.Average(r => r.Grade).ToString("F1");
+                                    }
+                                    else
+                                    {
+                                        rating = "-";
+                                    }
+                                }
+                                @if (rating == "-")
+                                {
+                                    <p class="item-block-column-category__category">Rating:<span class="item-block-column-category__text-grade default">@rating</span></p>
+                                }
+                                else
+                                {
+                                    @if (Convert.ToDouble(rating) > 7)
+                                    {
+                                        <p class="item-block-column-category__category">Rating:<span class="item-block-column-category__text-grade green">@rating</span></p>
+                                    }
+                                    else
+                                    {
+                                        @if (Convert.ToDouble(rating) < 4)
+                                        {
+                                            <p class="item-block-column-category__category">Rating:<span class="item-block-column-category__text-grade red">@rating</span></p>
+                                        }
+                                        else
+                                        {
+                                            <p class="item-block-column-category__category">Rating:<span class="item-block-column-category__text-grade yellow">@rating</span></p>
+                                        }
+                                    }
+                                }
+                            </div>
+                            <div class="button-row">
+                                <a class="edit-btn" asp-page="Edit" asp-route-id=@item.ProductID><i class="fa fa-edit"></i>&nbspEdit</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            @if (await UserManager.IsInRoleAsync(Model.user, "user"))
+            {
+                <p class="reviews-number-text">You can't sell anything until you become a seller</p>
+            }
+            else
+            {
+                <div class="center"><a class="button-6" role="button" asp-page="Create"><span class="material-icons">add</span>Add</a></div>
+            }
+        </div>
+    </div>
+    @section Scripts {
+        <script src="js/sort-buttons-detail.js"></script>
+    }
+}

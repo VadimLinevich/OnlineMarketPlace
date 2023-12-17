@@ -1,0 +1,88 @@
+﻿@page
+@model OnlineMarketplace.Areas.Profile.Pages.Dashboard.CreateModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+@if (!SignInManager.IsSignedIn(User) || await UserManager.IsInRoleAsync(Model.user, "user"))
+{
+    Response.Redirect("/");
+}
+else
+{
+    @section CSS {
+        <link rel="stylesheet" type="text/css" href="~/css/profile.css" />
+        <link rel="stylesheet" type="text/css" href="~/css/settings.css" />
+    }
+    <div class="title-block">
+        <div class="user-row">
+            <img class="user-image" src=@Url.Content(Model.user.Avatar) />
+            <div class="user-details-col">
+                <p class="user-name"><b>@Model.user.UserName</b></p>
+                <p class="user-details-col__info">
+                    Name: <span class="inter-text-12px">@Model.user.Name</span>
+                </p>
+                <p class="user-details-col__info">
+                    Last name: <span class="inter-text-12px">@Model.user.LastName</span>
+                </p>
+                <p class="user-details-col__info">
+                    Email: <span class="inter-text-12px">@Model.user.Email</span>
+                </p>
+                <p class="user-details-col__info">
+                    Birth date: <span class="inter-text-12px">@Model.user.Date_of_birth.ToString("dd MMMM yyyy", new System.Globalization.CultureInfo("en-US"))</span>
+                </p>
+            </div>
+        </div>
+        <div class="detail-row">
+            <a class="sort-button-active" asp-area="Profile" asp-page="/Dashboard/Index">Dashboard</a>
+            <a class="sort-button left-width-0" asp-area="Profile" asp-page="/Downloads/Index">Downloads</a>
+            <a class="sort-button left-width-0" asp-area="Profile" asp-page="/Reviews/Index">Reviews</a>
+            <a class="sort-button left-width-0" asp-area="Profile" asp-page="/Wishlist/Index">Wishlist</a>
+            <a class="sort-button left-width-0" asp-area="Profile" asp-page="/Settings/Edit">Settings</a>
+        </div>
+    </div>
+    <div class="main-content">
+        <div class="content-column">
+            <p class="sign-in-title">Put your product up to sale</p>
+            <form class="login-form" method="post" enctype="multipart/form-data">
+                <p class="label">Title:</p>
+                <div asp-validation-summary="ModelOnly" class="login-form__error"></div>
+                <input asp-for="Product.ProductTitle" required class="login-form__input" placeholder="Title...">
+                <span asp-validation-for="Product.ProductTitle" class="login-form__error"></span>
+                <p class="label">Description:</p>
+                <textarea class="rev-container__rev-content" asp-for="Product.Description" required id="review" placeholder="Enter..."></textarea>
+                <span asp-validation-for="Product.Description" class="login-form__error"></span>
+                <p class="label">Avatar:</p>
+                <input type="file" name="uploadedFile" />
+                <p class="label">Category:</p>
+                <select asp-for="Product.CategoryID" class="login-form__input" asp-items="ViewBag.CategoryID"></select>
+                <p class="label">Software:</p>
+                <input asp-for="Product.SoftwareVersion" required class="login-form__input" placeholder="Software...">
+                <span asp-validation-for="Product.SoftwareVersion" class="login-form__error"></span>
+                <p class="label">Price:</p>
+                <input asp-for="Product.Price" required class="login-form__input" placeholder="Price...">
+                <span asp-validation-for="Product.Price" class="login-form__error"></span>
+                <button type="submit" class="login-form__log-in">Create</button>
+            </form>
+        </div>
+    </div>
+    @section Scripts {
+        <script src="js/sort-buttons-detail.js"></script>
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+        <script>
+
+            $.validator.methods.range = function (value, element, param) {
+                var globalizedValue = value.replace(",", ".");
+                return this.optional(element) || (globalizedValue >= param[0] && globalizedValue <= param[1]);
+            }
+
+            $.validator.methods.number = function (value, element) {
+                return this.optional(element) || /-?(?:\d+|\d{1,3}(?:[\s\.,]\d{3})+)(?:[\.,]\d+)?$/.test(value);
+            }
+
+        </script>
+    }
+}

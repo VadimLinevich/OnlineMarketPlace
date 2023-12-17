@@ -30,6 +30,7 @@ div.title-block {
 .user-image {
     height: 100px;
     width: 100px;
+    border: 1px solid;
 }
 
 .user-name {
@@ -110,6 +111,10 @@ div.title-block {
     font-weight: 700;
     font-style: normal;
     text-align: center;
+}
+
+.sort-button:hover {
+    background-color: rgb(230, 230, 230);
 }
 
 .left-width-0 {

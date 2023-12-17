@@ -140,7 +140,7 @@ namespace OnlineMarketplace.Areas.Identity.Pages.Account
                 /* await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                  await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
                  var result = await _userManager.CreateAsync(user, Input.Password);*/
-                var user = new ApplicationUser { UserName = Input.UserName, Email = Input.Email, Avatar = "~/images/profile-80x80.jpg", Name = Input.Name, LastName = Input.LastName, Date_of_birth = Input.Date_Of_Birth };
+                var user = new ApplicationUser { UserName = Input.UserName, Email = Input.Email, Avatar = "~/Avatars/Default-avatar.png", Name = Input.Name, LastName = Input.LastName, Date_of_birth = Input.Date_Of_Birth };
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
                 if (result.Succeeded)

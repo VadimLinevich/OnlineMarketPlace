@@ -6,11 +6,11 @@ namespace OnlineMarketplace.Entities
 {
     public class ApplicationUser : IdentityUser
     {
-        [MinLength(3)]
+        [MinLength(3, ErrorMessage = "Min length of name field should be at least 3 characters")]
         [MaxLength(64)]
         public string? Name { get; set; }
 
-        [MinLength(3)]
+        [MinLength(3, ErrorMessage = "Min length of last name field should be at least 3 characters")]
         [MaxLength(64)]
         public string? LastName { get; set; }
 

@@ -158,17 +158,17 @@
             <div class="price-column">
                 @if (Model.WishLists.Count() == 0)
                 {
-                    <form asp-controller="Item" asp-action="AddToWishlist" asp-route-sort=@ViewData["Sort"] asp-route-category=@ViewData["Category"] method="post"><button name="id" class="heart-like-button" type="submit" value=@item.ProductID></button></form>
+                    <form asp-controller="Item" asp-action="AddToWishlist" asp-route-sort=@ViewData["Sort"] asp-route-category=@ViewData["Category"] asp-route-q=@ViewData["SearchString"] method="post"><button name="id" class="heart-like-button" type="submit" value=@item.ProductID></button></form>
                 }
                 else
                 {
                     if (Model.WishLists[0].Products.Exists(p => p.ProductID == item.ProductID))
                     {
-                        <form asp-controller="Item" asp-action="AddToWishlist" asp-route-sort=@ViewData["Sort"] asp-route-category=@ViewData["Category"] method="post"><button name="id" class="heart-like-button liked" type="submit" value=@item.ProductID></button></form>
+                        <form asp-controller="Item" asp-action="AddToWishlist" asp-route-sort=@ViewData["Sort"] asp-route-category=@ViewData["Category"] asp-route-q=@ViewData["SearchString"] method="post"><button name="id" class="heart-like-button liked" type="submit" value=@item.ProductID></button></form>
                     }
                     else
                     {
-                        <form asp-controller="Item" asp-action="AddToWishlist" asp-route-sort=@ViewData["Sort"] asp-route-category=@ViewData["Category"] method="post"><button name="id" class="heart-like-button" type="submit" value=@item.ProductID></button></form>
+                        <form asp-controller="Item" asp-action="AddToWishlist" asp-route-sort=@ViewData["Sort"] asp-route-category=@ViewData["Category"] asp-route-q=@ViewData["SearchString"] method="post"><button name="id" class="heart-like-button" type="submit" value=@item.ProductID></button></form>
                     }
                 }
                 <p class="price">@item.Price$</p>
@@ -178,84 +178,6 @@
             </div>
         </div>
     }
-    @*<div class="item-block">
-            <img class="item-block__image" src="Images/itemimage.png" />
-            <div class="item-block-column">
-                <a class="nav-2" asp-action="Index" asp-controller="ItemDetail">
-                    <h1 class="item-block-column__title">
-                        eCommerce templates
-                    </h1>
-                </a>
-                <p class="item-block-column__description">
-                    by TheRemedy
-                </p>
-                <div class="item-block-column-category">
-                    <p class="item-block-column-category__category">Software version:<span class="item-block-column-category__text">HTML 5.x</span></p>
-                    <p class="item-block-column-category__category">File types included:<span class="item-block-column-category__text">HTML</span></p>
-                    <p class="item-block-column-category__category">Rating:<span class="item-block-column-category__text-grade">8.3</span></p>
-                </div>
-            </div>
-            <div class="vert-rect"></div>
-            <div class="price-column">
-                <div class="heart-like-button"></div>
-                <p class="price">22$</p>
-                <p class="desc">123 Sales</p>
-                <p class="desc">Created: 24 Jun 23</p>
-                <button class="button-hover-addcart button"><span>Buy</span><i class="fa fa-shopping-cart"></i></button>
-            </div>
-        </div>
-        <div class="item-block">
-            <img class="item-block__image" src="Images/itemimage.png" />
-            <div class="item-block-column">
-                <a class="nav-2" asp-action="Index" asp-controller="ItemDetail">
-                    <h1 class="item-block-column__title">
-                        eCommerce templates
-                    </h1>
-                </a>
-                <p class="item-block-column__description">
-                    by TheRemedy
-                </p>
-                <div class="item-block-column-category">
-                    <p class="item-block-column-category__category">Software version:<span class="item-block-column-category__text">HTML 5.x</span></p>
-                    <p class="item-block-column-category__category">File types included:<span class="item-block-column-category__text">HTML</span></p>
-                    <p class="item-block-column-category__category">Rating:<span class="item-block-column-category__text-grade">8.3</span></p>
-                </div>
-            </div>
-            <div class="vert-rect"></div>
-            <div class="price-column">
-                <div class="heart-like-button"></div>
-                <p class="price">22$</p>
-                <p class="desc">123 Sales</p>
-                <p class="desc">Created: 24 Jun 23</p>
-                <button class="button-hover-addcart button"><span>Buy</span><i class="fa fa-shopping-cart"></i></button>
-            </div>
-        </div>
-        <div class="item-block">
-            <img class="item-block__image" src="Images/itemimage.png" />
-            <div class="item-block-column">
-                <a class="nav-2" asp-action="Index" asp-controller="ItemDetail">
-                    <h1 class="item-block-column__title">
-                        eCommerce templates
-                    </h1>
-                </a>
-                <p class="item-block-column__description">
-                    by TheRemedy
-                </p>
-                <div class="item-block-column-category">
-                    <p class="item-block-column-category__category">Software version:<span class="item-block-column-category__text">HTML 5.x</span></p>
-                    <p class="item-block-column-category__category">File types included:<span class="item-block-column-category__text">HTML</span></p>
-                    <p class="item-block-column-category__category">Rating:<span class="item-block-column-category__text-grade">8.3</span></p>
-                </div>
-            </div>
-            <div class="vert-rect"></div>
-            <div class="price-column">
-                <div class="heart-like-button"></div>
-                <p class="price">22$</p>
-                <p class="desc">123 Sales</p>
-                <p class="desc">Created: 24 Jun 23</p>
-                <button class="button-hover-addcart button"><span>Buy</span><i class="fa fa-shopping-cart"></i></button>
-            </div>
-        </div>*@
 </div>
 
 @section Scripts
