@@ -3,6 +3,7 @@
 
 @{
     ViewData["Title"] = "Index";
+    string filesTypes = "";
     string rating = "";
 }
 
@@ -64,7 +65,17 @@ else
                             </a>
                             <div class="item-block-column-category">
                                 <p class="item-block-column-category__category">Software version:<span class="item-block-column-category__text">@Model.Products.FirstOrDefault(p => p.ProductID == item.ProductID).SoftwareVersion</span></p>
-                                <p class="item-block-column-category__category">File types included:<span class="item-block-column-category__text">HTML</span></p>
+                                @{
+                                    var files = Model.Files.Where(f => f.ProductID == item.ProductID).ToList();
+                                    filesTypes = "";
+                                    foreach (var file in files)
+                                    {
+                                        filesTypes = System.IO.Path.GetExtension(file.FileTitle) + "," + " ";
+                                    }
+                                    filesTypes = filesTypes.Trim();
+                                    filesTypes = filesTypes.Remove(filesTypes.Length - 1);
+                                }
+                                <p class="item-block-column-category__category">File types included:<span class="item-block-column-category__text">@filesTypes.ToUpper().Replace(".", "")</span></p>
                                 @{
                                     var reviews = Model.Reviews.Where(r => r.ProductID == item.ProductID).ToList();
                                     if (reviews.Count() != 0)

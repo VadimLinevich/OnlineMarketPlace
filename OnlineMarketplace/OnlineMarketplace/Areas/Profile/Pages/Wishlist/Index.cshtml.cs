@@ -30,6 +30,8 @@ namespace OnlineMarketplace.Areas.Profile.Pages.Wishlist
 
         public IEnumerable<Review> Reviews { get; set; }
 
+        public IEnumerable<Entities.File> Files { get; set; }
+
         public async Task OnGetAsync()
         {
             if (_context.WishList != null)
@@ -41,9 +43,11 @@ namespace OnlineMarketplace.Areas.Profile.Pages.Wishlist
                     var user = await _userManager.GetUserAsync(HttpContext.User);
                     var wishlists = _context.WishList.Include(c => c.Products).ToList();
                     var wishlist = wishlists.FirstOrDefault(w => w.UserID == user.Id);
+                    var files = _context.File.ToList();
                     WishList = wishlist;
                     Users = users;
                     Reviews = reviews;
+                    Files = files;
                     this.user = user;
                 }
             }

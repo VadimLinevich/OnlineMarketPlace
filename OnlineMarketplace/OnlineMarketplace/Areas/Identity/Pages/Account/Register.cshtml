@@ -38,7 +38,7 @@ else
                 <input asp-for="Input.ConfirmPassword" required type="password" class="login-form__input" id="Confirmpassword" placeholder="Password...">
                 <span asp-validation-for="Input.ConfirmPassword" class="login-form__error"></span>
                 <p class="label-2">Date of birth</p>
-                <input asp-for="Input.Date_Of_Birth" required type="date" class="login-form__input" id="birthdate" value="2001-01-01">
+                <input asp-for="Input.Date_Of_Birth" required type="date" class="login-form__input" id="birthdate" value="2001-01-01" max="2020-03-20" min="1900-03-20">
                 <span asp-validation-for="Input.Date_Of_Birth" class="login-form__error"></span>
                 <button type="submit" class="login-form__log-in">Create Account</button>
                 <p class="text">Already have an CodeMarket Account?<a class="link" asp-page="./Login" asp-route-returnUrl="@Model.ReturnUrl">Sign in here</a></p>

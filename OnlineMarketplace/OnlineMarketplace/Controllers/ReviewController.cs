@@ -37,6 +37,15 @@ namespace OnlineMarketplace.Controllers
                     var user = await dbcontext.Users.FindAsync(product.UserID);
                     var reviews = dbcontext.Review.Where(r => r.ProductID == id).ToList();
                     var users = dbcontext.Users.ToList();
+                    string filesTypes = "";
+                    var files = dbcontext.File.Where(f => f.ProductID == id).ToList();
+                    foreach (var file in files)
+                    {
+                        filesTypes = Path.GetExtension(file.FileTitle) + "," + " ";
+                    }
+                    filesTypes = filesTypes.Trim();
+                    filesTypes = filesTypes.Remove(filesTypes.Length - 1);
+                    ViewData["FileTypes"] = filesTypes.ToUpper().Replace(".", "");
                     ItemDetailViewModel itemDetailViewModel = new ItemDetailViewModel { user = user, product = product, WishLists = wishlists, Reviews = reviews, Users = users };
                     if (SignInuser != null)
                     {
@@ -88,6 +97,15 @@ namespace OnlineMarketplace.Controllers
                     var user = await dbcontext.Users.FindAsync(product.UserID);
                     var reviews = dbcontext.Review.Where(r => r.ProductID == id).ToList();
                     var users = dbcontext.Users.ToList();
+                    string filesTypes = "";
+                    var files = dbcontext.File.Where(f => f.ProductID == id).ToList();
+                    foreach (var file in files)
+                    {
+                        filesTypes = Path.GetExtension(file.FileTitle) + "," + " ";
+                    }
+                    filesTypes = filesTypes.Trim();
+                    filesTypes = filesTypes.Remove(filesTypes.Length - 1);
+                    ViewData["FileTypes"] = filesTypes.ToUpper().Replace(".", "");
                     ItemDetailViewModel itemDetailViewModel = new ItemDetailViewModel { user = user, product = product, WishLists = wishlists, Reviews = reviews, Users = users };
                     if (SignInuser != null)
                     {
@@ -135,6 +153,15 @@ namespace OnlineMarketplace.Controllers
                     var user = await dbcontext.Users.FindAsync(product.UserID);
                     var reviews = dbcontext.Review.Where(r => r.ProductID == id).ToList();
                     var users = dbcontext.Users.ToList();
+                    string filesTypes = "";
+                    var files = dbcontext.File.Where(f => f.ProductID == id).ToList();
+                    foreach (var file in files)
+                    {
+                        filesTypes = Path.GetExtension(file.FileTitle) + "," + " ";
+                    }
+                    filesTypes = filesTypes.Trim();
+                    filesTypes = filesTypes.Remove(filesTypes.Length - 1);
+                    ViewData["FileTypes"] = filesTypes.ToUpper().Replace(".", "");
                     ItemDetailViewModel itemDetailViewModel = new ItemDetailViewModel { user = user, product = product, WishLists = wishlists, Reviews = reviews, Users = users };
                     if (SignInuser != null)
                     {

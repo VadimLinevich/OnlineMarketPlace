@@ -31,6 +31,7 @@ namespace OnlineMarketplace.Controllers
             var users = dbcontext.Users.ToList();
             var products = dbcontext.Product.Where(p => p.Is_Deleted == false).ToList();
             var reviews = dbcontext.Review.ToList();
+            var files = dbcontext.File.ToList();
             if (!String.IsNullOrEmpty(q))
             {
                 products = products.Where(s => s.ProductTitle.Contains(q) || s.ProductTitle.Contains(q.ToUpper())).ToList();
@@ -51,7 +52,10 @@ namespace OnlineMarketplace.Controllers
             }
             if (sort == "Best rated")
             {
-                products = products.OrderByDescending(p => p.NumberOfSales).ToList();
+                products = dbcontext.Product.Include(p => p.Reviews).Where(p => p.Reviews.Count != 0).ToList();
+                var ProductWithZeroReviews = dbcontext.Product.Where(p => p.Reviews.Count == 0).ToList();
+                products = products.OrderByDescending(p => p.Reviews.Average(r => r.Grade)).ToList();
+                products.AddRange(ProductWithZeroReviews);
             }
             if (sort == "Price")
             {
@@ -60,7 +64,7 @@ namespace OnlineMarketplace.Controllers
             ViewData["Sort"] = sort;
             ViewData["Category"] = category;
             ViewData["SearchString"] = q;
-            ItemsViewModel itemsViewModel = new ItemsViewModel { Users = users, Products = products, Reviews = reviews, WishLists = wishlists };
+            ItemsViewModel itemsViewModel = new ItemsViewModel { Users = users, Products = products, Reviews = reviews, WishLists = wishlists, Files = files };
             return View(itemsViewModel);
         }
 

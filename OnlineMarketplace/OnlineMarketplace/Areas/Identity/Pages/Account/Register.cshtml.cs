@@ -135,11 +135,6 @@ namespace OnlineMarketplace.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                //var user = CreateUser();
-
-                /* await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
-                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
-                 var result = await _userManager.CreateAsync(user, Input.Password);*/
                 var user = new ApplicationUser { UserName = Input.UserName, Email = Input.Email, Avatar = "~/Avatars/Default-avatar.png", Name = Input.Name, LastName = Input.LastName, Date_of_birth = Input.Date_Of_Birth };
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
@@ -149,15 +144,6 @@ namespace OnlineMarketplace.Areas.Identity.Pages.Account
                     await _dbContext.WishList.AddAsync(new WishList { UserID = user.Id});
                     _dbContext.SaveChanges();
                     _logger.LogInformation("User created a new account with password.");
-
-                    /*var userId = await _userManager.GetUserIdAsync(user);
-                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                    var callbackUrl = Url.Page(
-                        "/Account/ConfirmEmail",
-                        pageHandler: null,
-                        values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
-                        protocol: Request.Scheme);*/
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
@@ -178,28 +164,5 @@ namespace OnlineMarketplace.Areas.Identity.Pages.Account
             // If we got this far, something failed, redisplay form
             return Page();
         }
-
-       /* private ApplicationUser CreateUser()
-        {
-            try
-            {
-                return Activator.CreateInstance<ApplicationUser>();
-            }
-            catch
-            {
-                throw new InvalidOperationException($"Can't create an instance of '{nameof(ApplicationUser)}'. " +
-                    $"Ensure that '{nameof(ApplicationUser)}' is not an abstract class and has a parameterless constructor, or alternatively " +
-                    $"override the register page in /Areas/Identity/Pages/Account/Register.cshtml");
-            }
-        }
-
-        private IUserEmailStore<ApplicationUser> GetEmailStore()
-        {
-            if (!_userManager.SupportsUserEmail)
-            {
-                throw new NotSupportedException("The default UI requires a user store with email support.");
-            }
-            return (IUserEmailStore<ApplicationUser>)_userStore;
-        }*/
     }
 }

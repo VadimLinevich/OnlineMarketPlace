@@ -34,7 +34,16 @@ namespace OnlineMarketplace.Controllers
                         wishlists = dbcontext.WishList.Include(c => c.Products).Where(w => w.UserID == SignInuser.Id).ToList();
                     }
                     var user = await dbcontext.Users.FindAsync(product.UserID);
-                    ItemDetailViewModel itemDetailViewModel = new ItemDetailViewModel { user = user, product = product, WishLists = wishlists };
+                    string filesTypes = "";
+                    var files = dbcontext.File.Where(f => f.ProductID == id).ToList();
+                    foreach (var file in files)
+                    {
+                        filesTypes = Path.GetExtension(file.FileTitle) + "," + " ";
+                    }
+                    filesTypes = filesTypes.Trim();
+                    filesTypes = filesTypes.Remove(filesTypes.Length - 1);
+                    ViewData["FileTypes"] = filesTypes.ToUpper().Replace(".", "");
+                    ItemDetailViewModel itemDetailViewModel = new ItemDetailViewModel { user = user, product = product, WishLists = wishlists};
                     return View(itemDetailViewModel);
                 }
             }

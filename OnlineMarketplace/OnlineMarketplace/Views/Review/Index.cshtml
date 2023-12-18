@@ -198,7 +198,7 @@
                     Published: <span class="inter-text-20px">@Model.product.CreateDate.ToString("dd MMM yyyy", new System.Globalization.CultureInfo("en-US"))</span>
                 </p>
                 <p class="group-table__info">
-                    Files included: <span class="inter-text-20px">JS, HTML, CSS</span>
+                    Files included: <span class="inter-text-20px">@ViewData["FileTypes"]</span>
                 </p>
                 <p class="group-table__info">
                     Software version: <span class="inter-text-20px">@Model.product.SoftwareVersion</span>

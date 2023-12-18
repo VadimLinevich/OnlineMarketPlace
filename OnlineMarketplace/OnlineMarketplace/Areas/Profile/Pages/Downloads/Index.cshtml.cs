@@ -33,6 +33,8 @@ namespace OnlineMarketplace.Areas.Profile.Pages.Downloads
 
         public IEnumerable<Review> Reviews { get; set; }
 
+        public IEnumerable<Entities.File> Files { get; set; }
+
         public ApplicationUser user { get; set; }
 
         public async Task OnGetAsync()
@@ -45,10 +47,12 @@ namespace OnlineMarketplace.Areas.Profile.Pages.Downloads
                     var sales = _context.Sale.Where(r => r.UserID == user.Id).ToList();
                     var products = _context.Product.ToList();
                     var reviews = _context.Review.ToList();
+                    var files = _context.File.ToList();
                     Sales = sales;
                     Products = products;
                     this.user = user;
                     Reviews = reviews;
+                    Files = files;
                 }
             }
         }
