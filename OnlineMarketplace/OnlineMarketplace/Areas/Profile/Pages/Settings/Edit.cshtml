@@ -52,7 +52,7 @@ else
                 <input asp-for="user.Email" type="email" required class="login-form__input" placeholder="Email...">
                 <span asp-validation-for="user.Email" class="login-form__error"></span>
                 <p class="label">Username:</p>
-                <input asp-for="user.UserName" required class="login-form__input" placeholder="LastName...">
+                <input asp-for="user.UserName" type="text" required class="login-form__input" placeholder="UserName...">
                 <span asp-validation-for="user.UserName" class="login-form__error"></span>
                 <p class="label">Avatar:</p>
                 <input type="file" name="uploadedFile"/>

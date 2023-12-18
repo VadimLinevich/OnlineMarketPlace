@@ -55,8 +55,10 @@ else
                 <p class="label">Description:</p>
                 <textarea class="rev-container__rev-content" asp-for="Product.Description" required id="review" placeholder="Enter..."></textarea>
                 <span asp-validation-for="Product.Description" class="login-form__error"></span>
-                <p class="label">Avatar:</p>
+                <p class="label">Title image:</p>
                 <input type="file" name="uploadedFile" />
+                <p class="label">Project file:</p>
+                <input type="file" name="projectFile" />
                 <p class="label">Category:</p>
                 <select asp-for="Product.CategoryID" class="login-form__input" asp-items="ViewBag.CategoryID"></select>
                 <p class="label">Software:</p>

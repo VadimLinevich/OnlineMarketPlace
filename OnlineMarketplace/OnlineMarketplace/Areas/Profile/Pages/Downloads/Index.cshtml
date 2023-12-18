@@ -99,9 +99,11 @@ else
                                     }
                                 }
                             </div>
-                            <div class="vn-blue">
-                                <a href="#" class="btn-wrap">DOWNLOAD</a>
-                            </div>
+                            <form method="post" asp-route-id=@item.ProductID>
+                                <button class="vn-blue" type="submit">
+                                    <a class="btn-wrap">DOWNLOAD</a>
+                                </button>
+                            </form>
                         </div>
                     </div>
                 }

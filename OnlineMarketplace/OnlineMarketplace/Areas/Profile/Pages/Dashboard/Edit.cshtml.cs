@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -58,10 +59,11 @@ namespace OnlineMarketplace.Areas.Profile.Pages.Dashboard
 
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see https://aka.ms/RazorPagesCRUD.
-        public async Task<IActionResult> OnPostAsync(IFormFile uploadedFile)
+        public async Task<IActionResult> OnPostAsync(IFormFile uploadedFile, IFormFile projectFile)
         {
             var user = await _userManager.GetUserAsync(HttpContext.User);
             var product = await _context.Product.FirstOrDefaultAsync(m => m.ProductID == Product.ProductID);
+            ModelState.Remove("projectfile");
             ModelState.Remove("uploadedfile");
             ModelState.Remove("Product.User");
             ModelState.Remove("Product.UserID");
@@ -74,6 +76,46 @@ namespace OnlineMarketplace.Areas.Profile.Pages.Dashboard
                 ViewData["CategoryID"] = new SelectList(_context.Category, "CategoryID", "CategoryName");
                 return Page();
             }
+
+            if (projectFile != null)
+            {
+                var result = new StringBuilder();
+                using (var stream = projectFile.OpenReadStream())
+                {
+                    byte[] buffer = new byte[512];
+
+                    int bytesRead = stream.Read(buffer, 0, buffer.Length);
+
+                    if (bytesRead > 0)
+                    {
+
+                        for (int i = 0; i < bytesRead; i++)
+                        {
+                            if (buffer[i] < 32 && buffer[i] != 9 && buffer[i] != 10 && buffer[i] != 13)
+                            {
+                                ModelState.AddModelError(string.Empty, "Invalid product file");
+                                this.user = user;
+                                Product = product;
+                                ViewData["CategoryID"] = new SelectList(_context.Category, "CategoryID", "CategoryName");
+                                return Page();
+                            }
+                        }
+
+                    }
+                }
+                using (var reader = new StreamReader(projectFile.OpenReadStream()))
+                {
+                    while (reader.Peek() >= 0)
+                    {
+                        result.AppendLine(await reader.ReadLineAsync());
+                    }
+                }
+                string fileContent = result.ToString();
+                var file = _context.File.Where(f => f.ProductID == product.ProductID).ToList();
+                file[0].FileTitle = projectFile.FileName;
+                file[0].Content = fileContent;
+            }
+
             if (uploadedFile != null)
             {
                 if (System.IO.File.Exists(_appEnvironment.WebRootPath + product.ProductImage.Substring(1)))
@@ -103,24 +145,6 @@ namespace OnlineMarketplace.Areas.Profile.Pages.Dashboard
             product.Is_Deleted = Product.Is_Deleted;
 
             await _context.SaveChangesAsync();
-
-            /*_context.Attach(Product).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ProductExists(Product.ProductID))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }*/
 
             return RedirectToPage("./Index");
         }

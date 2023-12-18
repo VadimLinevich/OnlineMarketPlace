@@ -44,6 +44,10 @@ namespace OnlineMarketplace.Areas.Profile.Pages.Settings
         public async Task<IActionResult> OnPostAsync(IFormFile uploadedFile)
         {
             var user = await _userManager.GetUserAsync(HttpContext.User);
+            string name = user.Name;
+            string lastname = user.LastName;
+            string username = user.UserName;
+            string email = user.Email;
             ModelState.Remove("user.WishList");
             ModelState.Remove("uploadedfile");
             if (!ModelState.IsValid)
@@ -64,10 +68,13 @@ namespace OnlineMarketplace.Areas.Profile.Pages.Settings
                 this.user = user;
                 return Page();
             }
-
+            user.Name = this.user.Name;
+            user.LastName = this.user.LastName;
+            user.Email = this.user.Email;
+            user.UserName = this.user.UserName;
             if (uploadedFile != null)
             {
-                if(System.IO.File.Exists(_appEnvironment.WebRootPath + user.Avatar.Substring(1)))
+                if (System.IO.File.Exists(_appEnvironment.WebRootPath + user.Avatar.Substring(1)) && user.Avatar.Substring(1) != "/Avatars/Default-avatar.png")
                 {
                     System.IO.File.Delete(_appEnvironment.WebRootPath + user.Avatar.Substring(1));
                 }
@@ -75,6 +82,10 @@ namespace OnlineMarketplace.Areas.Profile.Pages.Settings
                 if (Path.GetExtension(path) != ".jpg" && Path.GetExtension(path) != ".png")
                 {
                     ModelState.AddModelError(string.Empty, "File type should have jpg or png extension");
+                    user.Name = name;
+                    user.LastName = lastname;
+                    user.Email = email;
+                    user.UserName = username;
                     this.user = user;
                     return Page();
                 }
@@ -84,14 +95,24 @@ namespace OnlineMarketplace.Areas.Profile.Pages.Settings
                 }
                 user.Avatar = "~" + path;
             }
-            user.Name = this.user.Name;
-            user.LastName = this.user.LastName;
-            user.Email = this.user.Email;
-            user.NormalizedEmail = this.user.Email.ToUpper();
-            user.UserName = this.user.UserName;
-            user.NormalizedUserName = this.user.UserName.ToUpper();
 
-            await _context.SaveChangesAsync();
+            var result = await _userManager.UpdateAsync(user);
+
+            if (result.Succeeded)
+            {
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                ModelState.AddModelError(string.Empty, "Incorrect data in some fields");
+                user.Name = name;
+                user.LastName = lastname;
+                user.Email = email;
+                user.UserName = username;
+                this.user = user;
+                return Page();
+            }
+            
 
             return RedirectToPage("./Edit");
         }

@@ -127,6 +127,13 @@ span.item-block-column-category__text-grade {
     color: red;
 }
 
+
+.vn-blue {
+    cursor: pointer;
+    background: none;
+    border: none;
+    text-align: left;
+}
 a:link{text-decoration: none;}
 .vn-blue a{
     background-color: #2980b9;

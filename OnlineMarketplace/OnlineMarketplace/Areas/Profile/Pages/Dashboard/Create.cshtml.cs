@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -43,9 +44,10 @@ namespace OnlineMarketplace.Areas.Profile.Pages.Dashboard
         
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
-        public async Task<IActionResult> OnPostAsync(IFormFile uploadedFile)
+        public async Task<IActionResult> OnPostAsync(IFormFile uploadedFile, IFormFile projectFile)
         {
             var user = await _userManager.GetUserAsync(HttpContext.User);
+            ModelState.Remove("projectfile");
             ModelState.Remove("uploadedfile");
             ModelState.Remove("Product.User");
             ModelState.Remove("Product.UserID");
@@ -63,6 +65,50 @@ namespace OnlineMarketplace.Areas.Profile.Pages.Dashboard
                 this.user = user;
                 ViewData["CategoryID"] = new SelectList(_context.Category, "CategoryID", "CategoryName");
                 return Page();
+            }
+            if (projectFile == null)
+            {
+                ModelState.AddModelError(string.Empty, "Choose product file");
+                this.user = user;
+                ViewData["CategoryID"] = new SelectList(_context.Category, "CategoryID", "CategoryName");
+                return Page();
+            }
+
+            if (projectFile != null)
+            {
+                var result = new StringBuilder();
+                using (var stream = projectFile.OpenReadStream())
+                {
+                    byte[] buffer = new byte[512];
+
+                    int bytesRead = stream.Read(buffer, 0, buffer.Length);
+
+                    if (bytesRead > 0)
+                    {
+
+                        for (int i = 0; i < bytesRead; i++)
+                        {
+                            if (buffer[i] < 32 && buffer[i] != 9 && buffer[i] != 10 && buffer[i] != 13)
+                            {
+                                ModelState.AddModelError(string.Empty, "Invalid product file");
+                                this.user = user;
+                                ViewData["CategoryID"] = new SelectList(_context.Category, "CategoryID", "CategoryName");
+                                return Page();
+                            }
+                        }
+
+                    }
+                }
+                using (var reader = new StreamReader(projectFile.OpenReadStream()))
+                {
+                    while (reader.Peek() >= 0) 
+                    { 
+                        result.AppendLine(await reader.ReadLineAsync());
+                    }
+                }
+                string fileContent = result.ToString();
+                Entities.File file = new Entities.File { Product = Product, FileTitle = projectFile.FileName, Content = fileContent };
+                _context.File.Add(file);
             }
 
             if (uploadedFile != null)

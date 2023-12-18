@@ -42,7 +42,7 @@ namespace OnlineMarketplace.Entities
                 }
             }
 
-            List<Product> Products = new List<Product>
+            /*List<Product> Products = new List<Product>
             {
                 new Product { UserID = "dcfe9850-7a68-4fff-94a2-228546173d11", CategoryID = 1, ProductTitle = "Good templates", Description = "very very good", ProductImage = "~/Images/itemimage.png", SoftwareVersion = "HTML", Price = 20.00m , CreateDate = DateTime.Now},
                 new Product { UserID = "dcfe9850-7a68-4fff-94a2-228546173d11", CategoryID = 2, ProductTitle = "Good JS", Description = "very very good JS", ProductImage = "~/Images/itemimage.png", SoftwareVersion = "JS", Price = 10.00m, CreateDate = DateTime.Now }
@@ -68,7 +68,7 @@ namespace OnlineMarketplace.Entities
                 {
                     await dbContext.Review.AddAsync(review);
                 }
-            }
+            }*/
 
             List<Category> Categories = new List<Category>
             {
@@ -88,7 +88,7 @@ namespace OnlineMarketplace.Entities
                 }
             }
 
-            List<Sale> Sales = new List<Sale>
+            /*List<Sale> Sales = new List<Sale>
             {
                 new Sale { UserID = "48043fe3-523f-4c81-acba-17204e0da154", ProductID = 3, SaleDate = DateTime.Now }
             };
@@ -99,7 +99,7 @@ namespace OnlineMarketplace.Entities
                 {
                     await dbContext.Sale.AddAsync(sale);
                 }
-            }
+            }*/
 
             dbContext.SaveChanges();
         }
