@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,8 +10,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using NuGet.Packaging;
 using OnlineMarketplace.Data;
 using OnlineMarketplace.Entities;
+using static System.Net.WebRequestMethods;
 
 namespace OnlineMarketplace.Areas.Profile.Pages.Downloads
 {
@@ -60,27 +63,35 @@ namespace OnlineMarketplace.Areas.Profile.Pages.Downloads
         public async Task<IActionResult> OnPost(int id)
         {
             var DBFiles = _context.File.Where(f => f.ProductID == id).ToList();
-            string file_path = Path.Combine(_appEnvironment.WebRootPath, "Files/" + "DownloadFile" + Path.GetExtension(DBFiles[0].FileTitle));
-            using (FileStream fs = System.IO.File.Create(file_path))
+            foreach(var DBFile in DBFiles)
             {
-                byte[] info = new UTF8Encoding(true).GetBytes(DBFiles[0].Content);
-                fs.Write(info, 0, info.Length);
+                string file_path = Path.Combine(_appEnvironment.WebRootPath, "Files/" + DBFile.FileTitle);
+                using (FileStream fs = System.IO.File.Create(file_path))
+                {
+                    byte[] info = new UTF8Encoding(true).GetBytes(DBFile.Content);
+                    fs.Write(info, 0, info.Length);
+                }
             }
-            string[] files = Directory.GetFiles(_appEnvironment.WebRootPath + "/Files", "DownloadFile" + ".*");
 
-            FileInfo file = new FileInfo(file_path);
+            string fpath = Path.Combine(_appEnvironment.WebRootPath, "Downloads/Download.zip");
+            ZipFile.CreateFromDirectory(Path.Combine(_appEnvironment.WebRootPath, "Files"), fpath);
+            string[] files = Directory.GetFiles(_appEnvironment.WebRootPath + "/Files", "*.*")
+                             .Where(file => Path.GetExtension(file).ToLower() != ".zip")
+                             .ToArray();
+            foreach (string path in files)
+            {
+                System.IO.File.Delete(path);
+            }
+            FileInfo file = new FileInfo(fpath);
             if (file.Exists)
             {
-                string file_type = "text/plain";
-                string file_name = DBFiles[0].FileTitle;
-                var result = PhysicalFile(file_path, file_type, file_name);
+                string file_type = "application/zip";
+                string file_name = "Download.zip";
+                var result = PhysicalFile(fpath, file_type, file_name);
 
                 Response.OnCompleted(async () =>
                 {
-                    if (files.Length > 0)
-                    {
-                        await Task.Run(() => System.IO.File.Delete(files[0]));
-                    }
+                    await Task.Run(() => System.IO.File.Delete(fpath));
                 });
                 return result;
             }

@@ -70,7 +70,10 @@ else
                                     filesTypes = "";
                                     foreach (var file in files)
                                     {
-                                        filesTypes = System.IO.Path.GetExtension(file.FileTitle) + "," + " ";
+                                        if (!filesTypes.Contains(System.IO.Path.GetExtension(file.FileTitle)))
+                                        {
+                                            filesTypes = filesTypes + System.IO.Path.GetExtension(file.FileTitle) + "," + " ";
+                                        }
                                     }
                                     filesTypes = filesTypes.Trim();
                                     filesTypes = filesTypes.Remove(filesTypes.Length - 1);

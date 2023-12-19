@@ -1,5 +1,8 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> UserManager
+@{
     @model ItemDetailViewModel;
+    var user = await UserManager.GetUserAsync(User);
 }
 
 @section CSS {
@@ -18,13 +21,27 @@
     }
     else
     {
-        if (Model.WishLists[0].Products.Exists(p => p.ProductID == Model.product.ProductID))
+        @if (user != null && Model.Sales.Any(s => s.UserID == user.Id && s.ProductID == Model.product.ProductID))
         {
-            <form asp-controller="ItemDetail" asp-action="AddToWishlist"  asp-route-id=@Model.product.ProductID method="post"><button class="heart-like-button liked" type="submit"></button></form>
+            <div class="empty-block"></div>
         }
         else
         {
-            <form asp-controller="ItemDetail" asp-action="AddToWishlist"  asp-route-id=@Model.product.ProductID method="post"><button class="heart-like-button" type="submit"></button></form>
+            if (user != null && Model.product.UserID == user.Id)
+            {
+                <div class="empty-block"></div>
+            }
+            else
+            {
+                if (Model.WishLists[0].Products.Exists(p => p.ProductID == Model.product.ProductID))
+                {
+                    <form asp-controller="ItemDetail" asp-action="AddToWishlist" asp-route-id=@Model.product.ProductID method="post"><button class="heart-like-button liked" type="submit"></button></form>
+                }
+                else
+                {
+                    <form asp-controller="ItemDetail" asp-action="AddToWishlist" asp-route-id=@Model.product.ProductID method="post"><button class="heart-like-button" type="submit"></button></form>
+                }
+            }
         }
     }
     <div class="detail-row">
@@ -64,7 +81,21 @@
             }
             else
             {
-                <button class="button-hover-addcart button"><span>Buy</span><i class="fa fa-shopping-cart"></i></button>
+                @if (user != null && Model.Sales.Any(s => s.UserID == user.Id && s.ProductID == Model.product.ProductID))
+                {
+                    <p class="unavailable-text">You already buy this product</p>
+                }
+                else
+                {
+                    if (user != null && Model.product.UserID == user.Id)
+                    {
+                        <p class="unavailable-text">You are selling this product</p>
+                    }
+                    else
+                    {
+                        <form class="buy-form" asp-controller="ItemDetail" asp-action="Buy"><button type="submit" name="id" value=@Model.product.ProductID class="button-hover-addcart button"><span>Buy</span><i class="fa fa-shopping-cart"></i></button></form>
+                    }
+                }
             }
         </div>
     </div>

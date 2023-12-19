@@ -1,5 +1,8 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> UserManager
+@{
     @model ItemsViewModel;
+    var user = await UserManager.GetUserAsync(User);
     string rating = "";
     string filesTypes = "";
     ViewData["Title"] = "Items Page";
@@ -124,7 +127,10 @@
                         filesTypes = "";
                         foreach (var file in files)
                         {
-                            filesTypes = System.IO.Path.GetExtension(file.FileTitle) + "," + " ";
+                            if (!filesTypes.Contains(System.IO.Path.GetExtension(file.FileTitle)))
+                            {
+                                filesTypes = filesTypes + System.IO.Path.GetExtension(file.FileTitle) + "," + " ";
+                            }
                         }
                         filesTypes = filesTypes.Trim();
                         filesTypes = filesTypes.Remove(filesTypes.Length - 1);
@@ -173,19 +179,47 @@
                 }
                 else
                 {
-                    if (Model.WishLists[0].Products.Exists(p => p.ProductID == item.ProductID))
+                    @if (user != null && Model.Sales.Any(s => s.UserID == user.Id && s.ProductID == item.ProductID))
                     {
-                        <form asp-controller="Item" asp-action="AddToWishlist" asp-route-sort=@ViewData["Sort"] asp-route-category=@ViewData["Category"] asp-route-q=@ViewData["SearchString"] method="post"><button name="id" class="heart-like-button liked" type="submit" value=@item.ProductID></button></form>
+                        <div class="empty-block"></div>
                     }
                     else
                     {
-                        <form asp-controller="Item" asp-action="AddToWishlist" asp-route-sort=@ViewData["Sort"] asp-route-category=@ViewData["Category"] asp-route-q=@ViewData["SearchString"] method="post"><button name="id" class="heart-like-button" type="submit" value=@item.ProductID></button></form>
+                        if (user != null && item.UserID == user.Id)
+                        {
+                            <div class="empty-block"></div>
+                        }
+                        else
+                        {
+                            if (Model.WishLists[0].Products.Exists(p => p.ProductID == item.ProductID))
+                            {
+                                <form asp-controller="Item" asp-action="AddToWishlist" asp-route-sort=@ViewData["Sort"] asp-route-category=@ViewData["Category"] asp-route-q=@ViewData["SearchString"] method="post"><button name="id" class="heart-like-button liked" type="submit" value=@item.ProductID></button></form>
+                            }
+                            else
+                            {
+                                <form asp-controller="Item" asp-action="AddToWishlist" asp-route-sort=@ViewData["Sort"] asp-route-category=@ViewData["Category"] asp-route-q=@ViewData["SearchString"] method="post"><button name="id" class="heart-like-button" type="submit" value=@item.ProductID></button></form>
+                            }
+                        }
                     }
                 }
                 <p class="price">@item.Price$</p>
                 <p class="desc">@item.NumberOfSales Sales</p>
                 <p class="desc">Created: @item.CreateDate.ToString("dd MMM yyyy", new System.Globalization.CultureInfo("en-US"))</p>
-                <button class="button-hover-addcart button"><span>Buy</span><i class="fa fa-shopping-cart"></i></button>
+                @if (user != null && Model.Sales.Any(s => s.UserID == user.Id && s.ProductID == item.ProductID))
+                {
+                    <p class="unavailable-text">You already buy this product</p>
+                }
+                else
+                {
+                    if (user != null && item.UserID == user.Id)
+                    {
+                        <p class="unavailable-text">You are selling this product</p>
+                    }
+                    else
+                    {
+                        <form class="buy-form" asp-controller="Item" asp-action="Buy" asp-route-sort=@ViewData["Sort"] asp-route-category=@ViewData["Category"] asp-route-q=@ViewData["SearchString"] method="post"><button type="submit" name="id" value=@item.ProductID class="button-hover-addcart button"><span>Buy</span><i class="fa fa-shopping-cart"></i></button></form>
+                    }
+                }
             </div>
         </div>
     }
@@ -196,4 +230,3 @@
     <script src="~/js/dropdown.js"></script>
     <script src="~/js/heart.js"></script>
 }
-@*<script src="~/js/sort-buttons.js"></script>*@

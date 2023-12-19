@@ -9,6 +9,8 @@ namespace OnlineMarketplace.View_Models
 
         public IEnumerable<Review> Reviews { get; set; }
 
+        public IEnumerable<Sale> Sales { get; set; }
+
         public IEnumerable<Entities.File> Files { get; set; }
 
         public List<WishList> WishLists { get; set; }

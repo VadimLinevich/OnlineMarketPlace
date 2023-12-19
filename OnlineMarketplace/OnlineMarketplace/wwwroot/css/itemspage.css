@@ -640,5 +640,23 @@ p.desc {
   background-color: rgb(230, 230, 230);
 }
 
+.buy-form {
+    display: flex;
+    justify-content: center;
+}
 
+.unavailable-text {
+    height: auto;
+    color: black;
+    margin-top: 5px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    height: auto;
+    word-break: break-word;
+    align-self: center;
+}
+
+.empty-block {
+    height: 31px;
+}
 

@@ -234,3 +234,8 @@ span.item-block-column-category__text-grade {
     word-break: break-word;
     align-self: center;
 }
+
+.buy-form {
+    display: flex;
+    justify-content: center;
+}

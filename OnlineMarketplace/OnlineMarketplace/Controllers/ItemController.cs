@@ -32,9 +32,10 @@ namespace OnlineMarketplace.Controllers
             var products = dbcontext.Product.Where(p => p.Is_Deleted == false).ToList();
             var reviews = dbcontext.Review.ToList();
             var files = dbcontext.File.ToList();
+            var sales = dbcontext.Sale.ToList();
             if (!String.IsNullOrEmpty(q))
             {
-                products = products.Where(s => s.ProductTitle.Contains(q) || s.ProductTitle.Contains(q.ToUpper())).ToList();
+                products = products.Where(s => s.ProductTitle.Contains(q) || s.ProductTitle.ToUpper().Contains(q.ToUpper())).ToList();
                 category = "All";
                 sort = "Newest";
             }
@@ -64,7 +65,7 @@ namespace OnlineMarketplace.Controllers
             ViewData["Sort"] = sort;
             ViewData["Category"] = category;
             ViewData["SearchString"] = q;
-            ItemsViewModel itemsViewModel = new ItemsViewModel { Users = users, Products = products, Reviews = reviews, WishLists = wishlists, Files = files };
+            ItemsViewModel itemsViewModel = new ItemsViewModel { Users = users, Products = products, Reviews = reviews, WishLists = wishlists, Files = files, Sales = sales };
             return View(itemsViewModel);
         }
 
@@ -90,6 +91,40 @@ namespace OnlineMarketplace.Controllers
                     dbcontext.SaveChanges();
                 }
                 return RedirectToAction("Index", new {sort = sort, category = category, q = q });
+            }
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Buy(int? id, string sort = "Newest", string category = "All", string q = "")
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                if(q == "")
+                {
+                    return RedirectToPage("/Account/Login", new { area = "Identity", returnUrl = $"/Item?sort={sort}&category={category}" });
+                }
+                else
+                {
+                    return RedirectToPage("/Account/Login", new { area = "Identity", returnUrl = $"/Item?q={q}" });
+                }
+                
+            }
+            if (id != null)
+            {
+                var user = await usermanager.GetUserAsync(HttpContext.User);
+                var wishlists = dbcontext.WishList.Include(c => c.Products).ToList();
+                var wishlist = wishlists.FirstOrDefault(w => w.UserID == user.Id);
+                var product = dbcontext.Product.FirstOrDefault(p => p.ProductID == id);
+                if (wishlist.Products.Exists(p => p.ProductID == id))
+                {
+                    wishlist.Products.Remove(product);
+                }
+                product.NumberOfSales = product.NumberOfSales + 1;
+                var sale = new Sale { ProductID = id??(0), UserID = user.Id, SaleDate = DateTime.Now };
+                dbcontext.Sale.Add(sale);
+                await dbcontext.SaveChangesAsync();
+                return RedirectToAction("Index", new { sort = sort, category = category, q = q });
             }
             return RedirectToAction("Index");
         }

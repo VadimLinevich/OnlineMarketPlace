@@ -12,6 +12,8 @@ namespace OnlineMarketplace.View_Models
 
         public IEnumerable<ApplicationUser> Users { get; set; }
 
+        public IEnumerable<Sale> Sales { get; set; }
+
         public List<WishList> WishLists { get; set; }
 
         public List<Review> Reviews { get; set; }

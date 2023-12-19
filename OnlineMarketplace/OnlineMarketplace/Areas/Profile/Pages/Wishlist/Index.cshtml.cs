@@ -52,5 +52,22 @@ namespace OnlineMarketplace.Areas.Profile.Pages.Wishlist
                 }
             }
         }
+
+        public async Task<IActionResult> OnPost(int id)
+        {
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+            var wishlists = _context.WishList.Include(c => c.Products).ToList();
+            var wishlist = wishlists.FirstOrDefault(w => w.UserID == user.Id);
+            var product = _context.Product.FirstOrDefault(p => p.ProductID == id);
+            if (wishlist.Products.Exists(p => p.ProductID == id))
+            {
+                wishlist.Products.Remove(product);
+            }
+            product.NumberOfSales = product.NumberOfSales + 1;
+            var sale = new Sale { ProductID = id, UserID = user.Id, SaleDate = DateTime.Now };
+            _context.Sale.Add(sale);
+            await _context.SaveChangesAsync();
+            return RedirectToPage("./Index");
+        }
     }
 }

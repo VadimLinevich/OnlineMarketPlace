@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -73,42 +75,90 @@ namespace OnlineMarketplace.Areas.Profile.Pages.Dashboard
                 ViewData["CategoryID"] = new SelectList(_context.Category, "CategoryID", "CategoryName");
                 return Page();
             }
+            if(Path.GetExtension(projectFile.FileName) != ".zip")
+            {
+                ModelState.AddModelError(string.Empty, "Upload zip file");
+                this.user = user;
+                ViewData["CategoryID"] = new SelectList(_context.Category, "CategoryID", "CategoryName");
+                return Page();
+            }
 
             if (projectFile != null)
             {
-                var result = new StringBuilder();
-                using (var stream = projectFile.OpenReadStream())
+                string filePath = Path.Combine(_appEnvironment.WebRootPath, "Files/" + projectFile.FileName);
+                string extractPath = Path.Combine(_appEnvironment.WebRootPath, "Files/");
+
+                using (FileStream fileStream = new FileStream(filePath, FileMode.Create))
                 {
-                    byte[] buffer = new byte[512];
+                    projectFile.CopyTo(fileStream);
+                }
 
-                    int bytesRead = stream.Read(buffer, 0, buffer.Length);
+                if (Path.GetExtension(filePath).Equals(".zip", StringComparison.OrdinalIgnoreCase))
+                {
+                    ZipFile.ExtractToDirectory(filePath, extractPath);
 
-                    if (bytesRead > 0)
+                    System.IO.File.Delete(filePath);
+                }
+                string[] files = Directory.GetFiles(extractPath, "*.*", SearchOption.AllDirectories);
+
+                if (files.Length == 0)
+                {
+                    ModelState.AddModelError(string.Empty, "Upload not empty zip file");
+                    this.user = user;
+                    ViewData["CategoryID"] = new SelectList(_context.Category, "CategoryID", "CategoryName");
+                    return Page();
+                }
+
+                foreach(string path in files)
+                {
+                    var result = new StringBuilder();
+                    FileInfo fileInfo = new FileInfo(path);
+                    using (var stream = new FileStream(path, FileMode.Open))
                     {
+                        byte[] buffer = new byte[512];
 
-                        for (int i = 0; i < bytesRead; i++)
+                        int bytesRead = stream.Read(buffer, 0, buffer.Length);
+
+                        if (bytesRead > 0)
                         {
-                            if (buffer[i] < 32 && buffer[i] != 9 && buffer[i] != 10 && buffer[i] != 13)
-                            {
-                                ModelState.AddModelError(string.Empty, "Invalid product file");
-                                this.user = user;
-                                ViewData["CategoryID"] = new SelectList(_context.Category, "CategoryID", "CategoryName");
-                                return Page();
-                            }
-                        }
 
+                            for (int i = 0; i < bytesRead; i++)
+                            {
+                                if (buffer[i] < 32 && buffer[i] != 9 && buffer[i] != 10 && buffer[i] != 13)
+                                {
+                                    ModelState.AddModelError(string.Empty, "Invalid product archive file");
+                                    stream.Close();
+                                    foreach (string fpath in files)
+                                    {
+                                        System.IO.File.Delete(fpath);
+                                    }
+                                    this.user = user;
+                                    ViewData["CategoryID"] = new SelectList(_context.Category, "CategoryID", "CategoryName");
+                                    return Page();
+                                }
+                            }
+
+                        }
                     }
+                    using (var reader = new StreamReader(path))
+                    {
+                        while (reader.Peek() >= 0)
+                        {
+                            result.AppendLine(await reader.ReadLineAsync());
+                        }
+                    }
+                    string fileContent = result.ToString();
+                    Entities.File file = new Entities.File { Product = Product, FileTitle = fileInfo.Name, Content = fileContent };
+                    _context.File.Add(file);
+                    System.IO.File.Delete(path);
                 }
-                using (var reader = new StreamReader(projectFile.OpenReadStream()))
+
+                string[] subDirectories = Directory.GetDirectories(extractPath);
+
+                foreach (string subDir in subDirectories)
                 {
-                    while (reader.Peek() >= 0) 
-                    { 
-                        result.AppendLine(await reader.ReadLineAsync());
-                    }
+                    Directory.Delete(subDir, true);
                 }
-                string fileContent = result.ToString();
-                Entities.File file = new Entities.File { Product = Product, FileTitle = projectFile.FileName, Content = fileContent };
-                _context.File.Add(file);
             }
 
             if (uploadedFile != null)

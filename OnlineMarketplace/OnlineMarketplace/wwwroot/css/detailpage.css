@@ -386,3 +386,7 @@ p.price {
 }
 
 
+.buy-form {
+    display: flex;
+    justify-content: center;
+}

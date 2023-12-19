@@ -36,14 +36,18 @@ namespace OnlineMarketplace.Controllers
                     var user = await dbcontext.Users.FindAsync(product.UserID);
                     string filesTypes = "";
                     var files = dbcontext.File.Where(f => f.ProductID == id).ToList();
+                    var sales = dbcontext.Sale.ToList();
                     foreach (var file in files)
                     {
-                        filesTypes = Path.GetExtension(file.FileTitle) + "," + " ";
+                        if (!filesTypes.Contains(System.IO.Path.GetExtension(file.FileTitle)))
+                        {
+                            filesTypes = filesTypes + System.IO.Path.GetExtension(file.FileTitle) + "," + " ";
+                        }
                     }
                     filesTypes = filesTypes.Trim();
                     filesTypes = filesTypes.Remove(filesTypes.Length - 1);
                     ViewData["FileTypes"] = filesTypes.ToUpper().Replace(".", "");
-                    ItemDetailViewModel itemDetailViewModel = new ItemDetailViewModel { user = user, product = product, WishLists = wishlists};
+                    ItemDetailViewModel itemDetailViewModel = new ItemDetailViewModel { user = user, product = product, WishLists = wishlists, Sales = sales};
                     return View(itemDetailViewModel);
                 }
             }
@@ -71,6 +75,32 @@ namespace OnlineMarketplace.Controllers
                     wishlist.Products.Add(product);
                     dbcontext.SaveChanges();
                 }
+                return RedirectToAction("Index", new {id});
+            }
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Buy(int? id)
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToPage("/Account/Login", new { area = "Identity", returnUrl = $"/ItemDetail/Index/{id}" });
+            }
+            if (id != null)
+            {
+                var user = await usermanager.GetUserAsync(HttpContext.User);
+                var wishlists = dbcontext.WishList.Include(c => c.Products).ToList();
+                var wishlist = wishlists.FirstOrDefault(w => w.UserID == user.Id);
+                var product = dbcontext.Product.FirstOrDefault(p => p.ProductID == id);
+                if (wishlist.Products.Exists(p => p.ProductID == id))
+                {
+                    wishlist.Products.Remove(product);
+                }
+                product.NumberOfSales = product.NumberOfSales + 1;
+                var sale = new Sale { ProductID = id ?? (0), UserID = user.Id, SaleDate = DateTime.Now };
+                dbcontext.Sale.Add(sale);
+                await dbcontext.SaveChangesAsync();
                 return RedirectToAction("Index", new {id});
             }
             return RedirectToAction("Index");
